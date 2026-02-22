@@ -44,6 +44,7 @@
                 current_column += ch
             }
         }
+        columns.push(current_column)
         return columns
     }
 
