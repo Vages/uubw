@@ -31,6 +31,67 @@ function gammelt_format_csv(...rader) {
     return [gammelt_format_overskrift, ...rader].join('\n')
 }
 
+describe('aggreger_varigheter', () => {
+    it('summerer varigheter for like oppføringer på samme dag', () => {
+        const input = gammelt_format_csv(
+            gammelt_format_rad({ duration: '00:20:00' }),
+            gammelt_format_rad({ duration: '00:10:00' })
+        )
+        const resultat = globalThis.aggreger_varigheter(input)
+        const linjer = resultat.split('\n').filter(l => l.trim().length > 0)
+
+        expect(linjer).toHaveLength(2) // overskrift + 1 aggregert rad
+        const kolonner = linjer[1].split(',')
+        const duration_index = linjer[0].split(',').indexOf('Duration')
+        expect(kolonner[duration_index]).toBe('00:30:00')
+    })
+
+    it('beholder adskilte oppføringer med ulike tagger', () => {
+        const input = gammelt_format_csv(
+            gammelt_format_rad({ tags: 'timekode:AAA' }),
+            gammelt_format_rad({ tags: 'timekode:BBB' })
+        )
+        const resultat = globalThis.aggreger_varigheter(input)
+        const linjer = resultat.split('\n').filter(l => l.trim().length > 0)
+
+        expect(linjer).toHaveLength(3) // overskrift + 2 rader
+    })
+
+    it('beholder adskilte oppføringer på ulike dager', () => {
+        const input = gammelt_format_csv(
+            gammelt_format_rad({ date: '2024-01-01' }),
+            gammelt_format_rad({ date: '2024-01-02' })
+        )
+        const resultat = globalThis.aggreger_varigheter(input)
+        const linjer = resultat.split('\n').filter(l => l.trim().length > 0)
+
+        expect(linjer).toHaveLength(3) // overskrift + 2 rader
+    })
+
+    it('håndterer varigheter som summerer til mer enn én time', () => {
+        const input = gammelt_format_csv(
+            gammelt_format_rad({ duration: '00:45:00' }),
+            gammelt_format_rad({ duration: '00:45:00' })
+        )
+        const resultat = globalThis.aggreger_varigheter(input)
+        const linjer = resultat.split('\n').filter(l => l.trim().length > 0)
+        const duration_index = linjer[0].split(',').indexOf('Duration')
+        const kolonner = linjer[1].split(',')
+
+        expect(kolonner[duration_index]).toBe('01:30:00')
+    })
+
+    it('bevarer CSV-overskriften uendret', () => {
+        const input = gammelt_format_csv(
+            gammelt_format_rad()
+        )
+        const resultat = globalThis.aggreger_varigheter(input)
+        const overskrift = resultat.split('\n')[0]
+
+        expect(overskrift).toBe(gammelt_format_overskrift)
+    })
+})
+
 describe('toggl_til_tsv', () => {
     beforeEach(() => {
         globalThis.confirm = vi.fn(() => true)

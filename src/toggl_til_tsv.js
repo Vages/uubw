@@ -21,6 +21,64 @@
         ).join('\n')
     }
 
+    global.aggreger_varigheter = function (csv) {
+        const [first, ...lines] = csv.split('\n')
+        const labels = split_csv_line(first)
+
+        const description_index = labels.indexOf('Description')
+        const start_date_index = labels.indexOf('Start date')
+        const tags_index = labels.indexOf('Tags')
+        const duration_index = labels.indexOf('Duration')
+
+        const grupper = new Map()
+
+        for (const line of lines) {
+            const trimmed = line.trim()
+            if (trimmed.length === 0) continue
+
+            const kolonner = split_csv_line(trimmed)
+            const nokkel = [kolonner[description_index], kolonner[start_date_index], kolonner[tags_index]].join('\0')
+
+            if (grupper.has(nokkel)) {
+                grupper.get(nokkel).sekunder += parse_varighet(kolonner[duration_index])
+            } else {
+                grupper.set(nokkel, {
+                    kolonner: [...kolonner],
+                    sekunder: parse_varighet(kolonner[duration_index])
+                })
+            }
+        }
+
+        const resultat_linjer = [first]
+
+        for (const { kolonner, sekunder } of grupper.values()) {
+            kolonner[duration_index] = formater_varighet(sekunder)
+            resultat_linjer.push(til_csv_linje(kolonner))
+        }
+
+        return resultat_linjer.join('\n')
+    }
+
+    function parse_varighet(str) {
+        const [timer, minutter, sekunder] = str.split(':').map(n => parseInt(n))
+        return timer * 3600 + minutter * 60 + sekunder
+    }
+
+    function formater_varighet(sekunder) {
+        const timer = Math.floor(sekunder / 3600)
+        const minutter = Math.floor((sekunder % 3600) / 60)
+        const rest_sekunder = sekunder % 60
+        return [timer, minutter, rest_sekunder]
+            .map(n => String(n).padStart(2, '0'))
+            .join(':')
+    }
+
+    function til_csv_linje(kolonner) {
+        return kolonner.map(verdi =>
+            verdi.includes(',') ? `"${verdi}"` : verdi
+        ).join(',')
+    }
+
     function get_locale_decimal_separator() {
         if (typeof navigator !== 'undefined') {
             return 1.1.toLocaleString(navigator.language).substring(1, 2)
