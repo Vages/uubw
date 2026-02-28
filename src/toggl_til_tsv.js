@@ -51,7 +51,7 @@
     function to_time_entry(labels) {
         return function (line) {
             const columns = split_csv_line(line)
-            const columns_to_pick = ['Description', 'Start date', 'End date', 'Duration', 'Tags']
+            const columns_to_pick = ['Description', 'Start date', 'Duration', 'Tags']
             const columns_numbers = columns_to_pick.map(col => labels.indexOf(col))
             columns_numbers.forEach((i, ii) => {
                 if (i === -1) {
