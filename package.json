@@ -2,7 +2,7 @@
   "scripts": {
     "test": "vitest run",
     "build": "npm test && web-ext build -s src",
-    "sign": "source credentials.sh; web-ext sign -s src --api-key=$MOZ_API_KEY --api-secret=$MOZ_API_SECRET",
+    "sign": "web-ext sign -s src",
     "start": "web-ext run -s src"
   },
   "dependencies": {
