@@ -8,5 +8,10 @@
             "matches": [ "https://ubw.unit4cloud.com/*", "https://aspagresso.public.cloudservices.no/*" ],
             "js": [ "toggl_til_tsv.js", "uubw.js" ]
         }
-    ]
+    ],
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "{45b5a403-d1a4-4fdf-b963-f59e2fdd134d}"
+        }
+    }
 }
