@@ -8,17 +8,15 @@ Importer timeliste til UBW fra tekstfil med [komma-](https://en.wikipedia.org/wi
 ## Installere
 
 ### Firefox
-1. [Gå til siste release](../../releases/latest).
-2. Trykk på `.xpi`-filen under *Assets*.
-3. Godta installasjon og gi tilgang til `https://ubw.unit4cloud.com/*`.
+1. [Trykk på `uubw.xpi`](../../releases/latest/download/uubw.xpi).
+2. Godta installasjon og gi tilgang til `https://ubw.unit4cloud.com/*`.
 
 ### Chrome
-1. [Gå til siste release](../../releases/latest).
-2. Last ned `.zip`-filen under *Assets*, og pakk den ut til en mappe som blir liggende.
-3. Gå til chrome://extensions/.
-4. Slå på utviklermodus.
-5. Trykk på *Last inn upakket*.
-6. Velg mappen du pakket ut.
+1. [Last ned `uubw.zip`](../../releases/latest/download/uubw.zip), og pakk den ut til en mappe som blir liggende.
+2. Gå til chrome://extensions/.
+3. Slå på utviklermodus.
+4. Trykk på *Last inn upakket*.
+5. Velg mappen du pakket ut.
 
 
 ## Bruk
