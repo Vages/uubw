@@ -1,11 +1,15 @@
 {
   "scripts": {
-    "build": "web-ext build -s src",
+    "test": "vitest run",
+    "build": "npm test && web-ext build -s src",
     "sign": "source credentials.sh; web-ext sign -s src --api-key=$MOZ_API_KEY --api-secret=$MOZ_API_SECRET",
     "start": "web-ext run -s src"
   },
   "dependencies": {
     "readline-sync": "^1.4.10",
     "web-ext": "^6.0.0"
+  },
+  "devDependencies": {
+    "vitest": "^4.0.18"
   }
 }
