@@ -1,6 +1,7 @@
 # Unngå UBW
 
-Importer timeliste til UBW fra tekstfil med [komma-](https://en.wikipedia.org/wiki/Comma-separated_values) eller [tab-separerte verdier](https://en.wikipedia.org/wiki/Tab-separated_values).
+Fyll ut timelisten i UBW med timer fra Toggl, med ett trykk.
+Timelisten kan også fylles ut fra en tekstfil med [komma-](https://en.wikipedia.org/wiki/Comma-separated_values) eller [tab-separerte verdier](https://en.wikipedia.org/wiki/Tab-separated_values).
 
 ![](youtube.png)
 
@@ -9,7 +10,7 @@ Importer timeliste til UBW fra tekstfil med [komma-](https://en.wikipedia.org/wi
 
 ### Firefox
 1. [Trykk på `uubw.xpi`](../../releases/latest/download/uubw.xpi).
-2. Godta installasjon og gi tilgang til `https://ubw.unit4cloud.com/*`.
+2. Godta installasjon og gi tilgang til UBW og `https://api.track.toggl.com/*`.
 
 ### Chrome
 1. [Last ned `uubw.zip`](../../releases/latest/download/uubw.zip), og pakk den ut til en mappe som blir liggende.
@@ -20,17 +21,41 @@ Importer timeliste til UBW fra tekstfil med [komma-](https://en.wikipedia.org/wi
 
 
 ## Bruk
+### Tagger i Toggl
+Utvidelsen finner arbeidsordre og aktivitet i taggene på oppføringene i Toggl.
+
+- Tagg oppføringene med `arbeidsordre:nr`.
+  `nr` er arbeidsordre i UBW, eksempelvis er administrasjon `40010000-1`.
+  Den eldre taggen `timekode:nr` virker fortsatt.
+- Hvis oppføringen også skal ha en aktivitet, tagg med `aktivitet:nr`.
+
+Oppføringer med samme arbeidsordre, aktivitet og beskrivelse blir én rad i timelisten.
+Timene avrundes til nærmeste halvtime.
+
+### Toggl (direkte)
+1. Åpne tilvalgssiden (_options page_) for utvidelsen.
+   I Firefox går du til `about:addons`, velger _Unngå UBW_ og trykker _Innstillinger_.
+2. Lim inn API-nøkkelen fra [profilsiden i Toggl](https://track.toggl.com/profile), og trykk _Lagre_.
+3. Velg kundene og prosjektene i Toggl som skal tas med.
+   En valgt kunde tar også med prosjekter som opprettes senere.
+4. Åpne timelisten i UBW.
+5. Trykk _Fyll ut fra Toggl_ ved siden av datospennet for å fylle ut hele timelisten.
+   For å fylle ut én dag holder du musepekeren over dagkolonnen og trykker ⤓.
+6. Se over timene, og trykk _Lagre som utkast_.
+
+Rader som allerede står i timelisten, fylles ut i stedet for at det lages nye.
+Går det en timer i Toggl, stopper utfyllingen til timeren er stoppet.
+
+Toggl gir omtrent 30 kall i timen.
+Sparemodus på tilvalgssiden sparer ett kall per utfylling, men oppdager ikke en timer som ble startet før perioden.
+
 ### Toggl (CSV-format)
-1. Bruk timeren på toggl.com.
-2. Tagg timeføringene med `arbeidsordre:nr`.
-   `nr` er arbeidsordre i UBW, eksempelvis er administrasjon `40010000-1`.
-   Den eldre taggen `timekode:nr` virker fortsatt.
-3. Hvis timeføringen også skal ha en aktivitet, tagg med `aktivitet:nr`.
-4. Gå til *Reports* → *Detailed* → Velg tidsperiode, eksempelvis *This Week*.
-5. Last ned med knappen oppe til høyre, velg *Download CSV*.
-6. Åpne timeføringen i UBW.
-7. Dra over CSV-filen til UBW.
-8. Drikk kaffe og profiiiiiiit.
+1. Tagg oppføringene, som beskrevet over.
+2. Gå til *Reports* → *Detailed* → Velg tidsperiode, eksempelvis *This Week*.
+3. Last ned med knappen oppe til høyre, velg *Download CSV*.
+4. Åpne timelisten i UBW.
+5. Dra over CSV-filen til UBW.
+6. Drikk kaffe og profiiiiiiit.
 
 ### Tabseparerte verdier
 1. Lag timeliste i [TSV](https://en.wikipedia.org/wiki/Tab-separated_values) eller et regneark.
@@ -44,7 +69,7 @@ Importer timeliste til UBW fra tekstfil med [komma-](https://en.wikipedia.org/wi
 	ABSENCE     	-       	Lunsjpenger     	1 	1 	1 	1 	1
 	```
 
-2. Åpne timeføringen i UBW.
+2. Åpne timelisten i UBW.
 3. Dra over TSV-filen til UBW.
 4. Drikk kaffe og profiiiiiiit.
 
