@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+    <meta charset="utf-8">
+    <title>Unngå UBW – tilvalg</title>
+    <style>
+        body { font-family: system-ui, sans-serif; max-width: 40rem; margin: 2rem auto; padding: 0 1rem; }
+        section { margin-bottom: 2rem; }
+        ul { list-style: none; padding-left: 1.5rem; }
+        #prosjekttre > ul { padding-left: 0; }
+        .merknad { color: #666; font-size: 0.9em; }
+        #status { white-space: pre-line; }
+    </style>
+</head>
+<body>
+    <h1>Unngå UBW</h1>
+
+    <section>
+        <h2>API-nøkkel for Toggl</h2>
+        <p class="merknad">
+            Finnes under <em>API Token</em> på <a href="https://track.toggl.com/profile" target="_blank">profilsiden i Toggl</a>.
+            Nøkkelen synkroniseres med nettleserkontoen din.
+        </p>
+        <input id="api-nokkel" type="password" size="40" autocomplete="off">
+        <button id="lagre-nokkel">Lagre</button>
+    </section>
+
+    <section>
+        <h2>Sparemodus</h2>
+        <label>
+            <input id="sparemodus" type="checkbox">
+            Bruk færre kall mot Toggl
+        </label>
+        <p class="merknad">
+            En timer som ble startet før perioden og fortsatt går, blir da ikke oppdaget.
+        </p>
+    </section>
+
+    <section>
+        <h2>Prosjekter</h2>
+        <p class="merknad">Bare oppføringer i prosjektene som er valgt her, tas med når timelisten fylles ut.</p>
+        <button id="hent-prosjekter">Hent prosjekter på nytt</button>
+        <div id="prosjekttre"></div>
+    </section>
+
+    <p id="status"></p>
+
+    <script src="utvalg.js"></script>
+    <script src="toggl_api.js"></script>
+    <script src="tilvalg.js"></script>
+</body>
+</html>

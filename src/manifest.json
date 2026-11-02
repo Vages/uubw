@@ -3,6 +3,12 @@
     "version": "0.3.2",
     "description": "Last opp timeliste til UBW",
     "manifest_version": 3,
+    "permissions": [ "storage" ],
+    "host_permissions": [ "https://api.track.toggl.com/*" ],
+    "options_ui": {
+        "page": "tilvalg.html",
+        "open_in_tab": true
+    },
     "content_scripts": [
         {
             "matches": [ "https://ubw.unit4cloud.com/*", "https://aspagresso.public.cloudservices.no/*" ],
@@ -12,7 +18,13 @@
     "browser_specific_settings": {
         "gecko": {
             "id": "{45b5a403-d1a4-4fdf-b963-f59e2fdd134d}",
-            "strict_min_version": "128.0"
+            "strict_min_version": "140.0",
+            "data_collection_permissions": {
+                "required": [ "authenticationInfo" ]
+            }
+        },
+        "gecko_android": {
+            "strict_min_version": "142.0"
         }
     }
 }
