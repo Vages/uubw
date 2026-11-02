@@ -16,7 +16,7 @@
     "content_scripts": [
         {
             "matches": [ "https://ubw.unit4cloud.com/*", "https://aspagresso.public.cloudservices.no/*" ],
-            "js": [ "toggl_til_tsv.js", "timeliste.js", "uubw.js" ]
+            "js": [ "toggl_til_tsv.js", "utvalg.js", "timeliste.js", "uubw.js", "fyll_fra_toggl.js" ]
         }
     ],
     "browser_specific_settings": {
