@@ -41,7 +41,8 @@ function readFile (file) {
     })
 }
 
-async function fillTimesheet(tsv) {
+// Med `reuseRows` fylles rader med samme arbeidsordre, aktivitet og beskrivelse ut i stedet for å lage nye
+async function fillTimesheet(tsv, { reuseRows = false } = {}) {
     const timesheetEntries = tsv.split('\n')
         .filter(line => line[0] !== ';')
         .map(line =>
@@ -51,7 +52,7 @@ async function fillTimesheet(tsv) {
 
     for (const entry of timesheetEntries) {
         try {
-            await fillTimesheetRow(entry)
+            await fillTimesheetRow(entry, reuseRows)
         } catch (err) {
             console.error(err)
             alert(err.message)
@@ -59,14 +60,17 @@ async function fillTimesheet(tsv) {
     }
 }
 
-async function fillTimesheetRow([ workorder, activity, description, ...hoursByDay ]) {
+async function fillTimesheetRow([ workorder, activity, description, ...hoursByDay ], reuseRows = false) {
     console.log([ workorder, activity, description, ...hoursByDay ].join(', '))
 
     if (workorder === '') {
-        throw new Error(`Ingen timekode for '${description}', hopper over.`)
+        throw new Error(`Ingen arbeidsordre for '${description}', hopper over.`)
     }
 
-    if (workorder.indexOf('ABSENCE') === 0) {
+    const existingRow = reuseRows ? findRow(workorder, activity, description) : undefined
+    if (existingRow) {
+        await openRowEditor(existingRow)
+    } else if (workorder.indexOf('ABSENCE') === 0) {
         await addAbsenceRow(description)
     } else {
         await addRow(workorder, activity, description)
@@ -87,6 +91,32 @@ async function fillTimesheetRow([ workorder, activity, description, ...hoursByDa
         amountInput.dispatchEvent(new Event('keyup'))
     }
     await sleep(500)
+}
+
+// Uten aktivitet treffes rader med hvilken som helst aktivitet, siden UBW kan velge en selv.
+// Beskrivelsen sammenlignes uten hensyn til store og små bokstaver.
+function findRow (workorder, activity, description) {
+    const hasActivity = activity !== '' && activity !== '-'
+    const normalizeDescription = text => text.trim().toLocaleLowerCase('nb')
+    const rows = timeliste.readRows(document)
+    const match = rows.find(row =>
+        row.workOrder === workorder &&
+        (!hasActivity || row.activity === activity) &&
+        normalizeDescription(row.description) === normalizeDescription(description)
+    )
+    if (!match) {
+        console.info(`Fant ingen rad for ${workorder} / ${activity} / ${description}. Radene i timelisten:`,
+            rows.map(({ workOrder, activity, description }) => ({ workOrder, activity, description })))
+    }
+    return match
+}
+
+async function openRowEditor (row) {
+    const cell = row.getDayCell(1)
+    for (const type of ['mousedown', 'mouseup', 'click']) {
+        cell.dispatchEvent(new MouseEvent(type, { bubbles: true }))
+    }
+    await untilLoadingDone()
 }
 
 async function addAbsenceRow (description) {
