@@ -200,8 +200,8 @@ describe('toggl_til_tsv', () => {
         const linjer = resultat.split('\n')
 
         expect(linjer.length).toBeGreaterThanOrEqual(3) // overskrift + 2 oppfoeringer
-        expect(resultat).toContain('32010000-1')
-        expect(resultat).toContain('32010000-3')
+        expect(resultat).toContain('40010000-1')
+        expect(resultat).toContain('40010000-3')
         expect(resultat).toContain('beskrivelse1')
         expect(resultat).toContain('beskrivelse2')
     })

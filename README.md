@@ -37,9 +37,9 @@ Importer timeliste til UBW fra tekstfil med [komma-](https://en.wikipedia.org/wi
 
 	```tsv
 	;Arbeidsordre	Aktivitet	Beskrivelse     	man	tir	ons	tor	fre	lør	søn
-	32010000-1  	-       	Føre timer i UBW	100
-	32010000-1  	-       	Drikke kaffe    	  	8
-	32010000-1  	-       	Profiiiiiit     	  		8
+	40010000-1  	-       	Føre timer i UBW	100
+	40010000-1  	-       	Drikke kaffe    	  	8
+	40010000-1  	-       	Profiiiiiit     	  		8
 	ABSENCE     	-       	Lunsj for de med	0,5	0,5	0,5	0,5	0,5
 	ABSENCE     	-       	Lunsjpenger     	1 	1 	1 	1 	1
 	```
@@ -61,15 +61,15 @@ Første linje brukes for å velge kolonner. Felt i bruk er `Description`, `Start
 Eksempeleksport fra toggl:
 ```csv
 User,Email,Client,Project,Task,Description,Billable,Start date,Start time,End date,End time,Duration,Tags,Amount (USD)
-Ditt Navn,din@epost.no,,,,beskrivelse1,No,2019-04-01,08:00:00,2019-04-01,08:15:00,00:15:00,"timekode:32010000-1",
-Ditt Navn,din@epost.no,,,,beskrivelse2,No,2019-04-01,08:15:00,2019-04-01,08:30:00,00:15:00,"timekode:32010000-3",
+Ditt Navn,din@epost.no,,,,beskrivelse1,No,2019-04-01,08:00:00,2019-04-01,08:15:00,00:15:00,"timekode:40010000-1",
+Ditt Navn,din@epost.no,,,,beskrivelse2,No,2019-04-01,08:15:00,2019-04-01,08:30:00,00:15:00,"timekode:40010000-3",
 ```
 
 Hvis en ønsker lage CSV selv, vil CSV være:
 ```csv
 Description,Start date,Duration,Tags
-beskrivelse1,2019-04-01,00:15:00,"timekode:32010000-1"
-beskrivelse2,2019-04-01,00:15:00,"timekode:32010000-3"
+beskrivelse1,2019-04-01,00:15:00,"timekode:40010000-1"
+beskrivelse2,2019-04-01,00:15:00,"timekode:40010000-3"
 ```
 
 ### TSV
@@ -86,7 +86,7 @@ For lange uker trengs ekstra kolonner for å føre timene:
 
 ```tsv
 ;arbordre	aktivitet	beskrivelse	man	tir	ons	tor	fre	lør	søn	man	tir	ons
-32010000-1	-       	Lese epost	8	8	8	8	8			8	8	8
+40010000-1	-       	Lese epost	8	8	8	8	8			8	8	8
 ```
 
 Når timene føres vil de ikke bli synlig. En må navigere seg i kalenderen
