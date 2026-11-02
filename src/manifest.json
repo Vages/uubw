@@ -5,6 +5,10 @@
     "manifest_version": 3,
     "permissions": [ "storage" ],
     "host_permissions": [ "https://api.track.toggl.com/*" ],
+    "background": {
+        "scripts": [ "toggl_api.js", "bakgrunn.js" ],
+        "service_worker": "bakgrunn.js"
+    },
     "options_ui": {
         "page": "tilvalg.html",
         "open_in_tab": true

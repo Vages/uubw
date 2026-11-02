@@ -44,5 +44,30 @@
         }
     }
 
-    global.togglApi = { fetchProjectList }
+    function toEntry(entry) {
+        return {
+            description: entry.description ?? '',
+            start: entry.start,
+            durationInSeconds: entry.duration,
+            isRunning: entry.stop === null || entry.duration < 0,
+            tags: entry.tags ?? [],
+            projectId: entry.project_id ?? null,
+            workspaceId: entry.workspace_id,
+            clientName: entry.client_name ?? null,
+        }
+    }
+
+    // Toggl filtrerer på starttid, og `end` er ikke inkludert
+    async function fetchEntries(apiToken, start, end) {
+        const query = new URLSearchParams({ start_date: start, end_date: end, meta: 'true' })
+        const entries = await fetchFromToggl(`/me/time_entries?${query}`, apiToken)
+        return (entries ?? []).map(toEntry)
+    }
+
+    async function fetchRunningEntry(apiToken) {
+        const entry = await fetchFromToggl('/me/time_entries/current', apiToken)
+        return entry ? toEntry(entry) : null
+    }
+
+    global.togglApi = { fetchProjectList, fetchEntries, fetchRunningEntry }
 })(globalThis);
