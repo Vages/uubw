@@ -1,6 +1,6 @@
 {
     "name": "Unngå UBW",
-    "version": "0.3.2",
+    "version": "1.0.0",
     "description": "Last opp timeliste til UBW",
     "manifest_version": 3,
     "permissions": [ "storage" ],
