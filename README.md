@@ -22,7 +22,9 @@ Importer timeliste til UBW fra tekstfil med [komma-](https://en.wikipedia.org/wi
 ## Bruk
 ### Toggl (CSV-format)
 1. Bruk timeren på toggl.com.
-2. Tagg timeføringene med `timekode:nr`. `nr` er arbeidsordre i UBW, eksempelvis er administrasjon `32010000-1`.
+2. Tagg timeføringene med `arbeidsordre:nr`.
+   `nr` er arbeidsordre i UBW, eksempelvis er administrasjon `40010000-1`.
+   Den eldre taggen `timekode:nr` virker fortsatt.
 3. Hvis timeføringen også skal ha en aktivitet, tagg med `aktivitet:nr`.
 4. Gå til *Reports* → *Detailed* → Velg tidsperiode, eksempelvis *This Week*.
 5. Last ned med knappen oppe til høyre, velg *Download CSV*.

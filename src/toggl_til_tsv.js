@@ -130,18 +130,29 @@
     }
 
     function tags_to_timekode_and_aktivitet(time_entry) {
-        time_entry.timekode = get_regex_group(time_entry.tags, /.*timekode:([^ ,]+).*/, true)
+        time_entry.timekode = get_arbeidsordre(time_entry.tags)
         time_entry.aktivitet = get_regex_group(time_entry.tags, /.*aktivitet:([^ ,]+).*/)
 
         delete time_entry.tags
         return time_entry
     }
 
-    function get_regex_group(str, regex, fail_hard = false) {
+    // `timekode:` er den eldre taggen, og godtas fortsatt for bakoverkompatibilitet
+    function get_arbeidsordre(tags) {
+        const arbeidsordre = get_regex_group(tags, /.*arbeidsordre:([^ ,]+).*/)
+        const timekode = get_regex_group(tags, /.*timekode:([^ ,]+).*/)
+
+        if (arbeidsordre === '' && timekode === '') {
+            throw new Error(`Konvertering av CSV feilet, fant verken 'arbeidsordre:' eller 'timekode:' i taggene '${tags}'`)
+        } else if (arbeidsordre !== '' && timekode !== '' && arbeidsordre !== timekode) {
+            throw new Error(`Konvertering av CSV feilet, taggene '${tags}' har ulik verdi for 'arbeidsordre:' og 'timekode:'`)
+        }
+        return arbeidsordre || timekode
+    }
+
+    function get_regex_group(str, regex) {
         const match = str.match(regex)
-        if (fail_hard && match === null) {
-            throw new Error(`Konvertering av CSV feilet, fant ikke '${regex}' i taggene '${str}'`)
-        } else if (match === null) {
+        if (match === null) {
             return ''
         }
         return match[1]

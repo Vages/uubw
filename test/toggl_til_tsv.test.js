@@ -146,11 +146,35 @@ describe('toggl_til_tsv', () => {
         expect(data[4]).toBe(desimal(2.0))
     })
 
-    it('kaster feil ved manglende timekode i tags', () => {
+    it('kaster feil ved manglende arbeidsordre i tags', () => {
         const input = gammelt_format_csv(
-            gammelt_format_rad({ tags: 'ingen-timekode' })
+            gammelt_format_rad({ tags: 'ingen-arbeidsordre' })
         )
-        expect(() => globalThis.toggl_til_tsv(input)).toThrow(/timekode/)
+        expect(() => globalThis.toggl_til_tsv(input)).toThrow(/fant verken 'arbeidsordre:' eller 'timekode:'/)
+    })
+
+    it('leser arbeidsordre fra taggen arbeidsordre', () => {
+        const input = gammelt_format_csv(
+            gammelt_format_rad({ tags: 'arbeidsordre:12345678-1, aktivitet:11' })
+        )
+        const data = globalThis.toggl_til_tsv(input).split('\n')[1].split('\t')
+        expect(data[0]).toBe('12345678-1')
+        expect(data[1]).toBe('11')
+    })
+
+    it('godtar arbeidsordre og timekode med samme verdi', () => {
+        const input = gammelt_format_csv(
+            gammelt_format_rad({ tags: 'arbeidsordre:12345678-1, timekode:12345678-1' })
+        )
+        const data = globalThis.toggl_til_tsv(input).split('\n')[1].split('\t')
+        expect(data[0]).toBe('12345678-1')
+    })
+
+    it('kaster feil ved ulik verdi for arbeidsordre og timekode', () => {
+        const input = gammelt_format_csv(
+            gammelt_format_rad({ tags: 'arbeidsordre:12345678-1, timekode:87654321-1' })
+        )
+        expect(() => globalThis.toggl_til_tsv(input)).toThrow(/ulik verdi/)
     })
 
     it('kaster feil ved manglende kolonne i CSV', () => {
