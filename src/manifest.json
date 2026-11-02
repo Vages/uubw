@@ -2,7 +2,7 @@
     "name": "Unngå UBW",
     "version": "0.3.2",
     "description": "Last opp timeliste til UBW",
-    "manifest_version": 2,
+    "manifest_version": 3,
     "content_scripts": [
         {
             "matches": [ "https://ubw.unit4cloud.com/*", "https://aspagresso.public.cloudservices.no/*" ],
@@ -11,7 +11,8 @@
     ],
     "browser_specific_settings": {
         "gecko": {
-            "id": "{45b5a403-d1a4-4fdf-b963-f59e2fdd134d}"
+            "id": "{45b5a403-d1a4-4fdf-b963-f59e2fdd134d}",
+            "strict_min_version": "128.0"
         }
     }
 }
