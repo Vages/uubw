@@ -10,8 +10,24 @@
 
         const tsv = time_entries_to_tsv(time_entries)
         round_to_nearest_half_hour_and_notify_if_rounding_error(tsv)
+        return format_tsv(tsv)
+    }
 
+    // Oppføringer fra Toggl-API-et, med kolonner for hver dag fra og med `first_day` (YYYY-MM-DD)
+    global.oppforinger_til_tsv = function (entries, first_day, number_of_days) {
+        const time_entries = entries.map(entry => tags_to_timekode_and_aktivitet({
+            description: entry.description,
+            start_date: to_local_date(entry.start),
+            hours_exact: entry.durationInSeconds / 60 / 60,
+            tags: entry.tags.join(', '),
+        }))
 
+        const tsv = time_entries_to_tsv(time_entries, first_day, number_of_days)
+        round_to_nearest_half_hour_and_notify_if_rounding_error(tsv)
+        return format_tsv(tsv)
+    }
+
+    function format_tsv(tsv) {
         const locale_decimal_separator = get_locale_decimal_separator();
         return tsv.map(line =>
             line.map(col => typeof col === 'number'
@@ -19,6 +35,14 @@
                 : col
             ).join('\t')
         ).join('\n')
+    }
+
+    // En oppføring som går over midnatt, telles på startdagen i lokal tid
+    function to_local_date(timestamp) {
+        const date = new Date(timestamp)
+        return [date.getFullYear(), date.getMonth() + 1, date.getDate()]
+            .map(n => String(n).padStart(2, '0'))
+            .join('-')
     }
 
     global.aggreger_varigheter = function (csv) {
@@ -143,9 +167,9 @@
         const timekode = get_regex_group(tags, /.*timekode:([^ ,]+).*/)
 
         if (arbeidsordre === '' && timekode === '') {
-            throw new Error(`Konvertering av CSV feilet, fant verken 'arbeidsordre:' eller 'timekode:' i taggene '${tags}'`)
+            throw new Error(`Fant verken 'arbeidsordre:' eller 'timekode:' i taggene '${tags}'`)
         } else if (arbeidsordre !== '' && timekode !== '' && arbeidsordre !== timekode) {
-            throw new Error(`Konvertering av CSV feilet, taggene '${tags}' har ulik verdi for 'arbeidsordre:' og 'timekode:'`)
+            throw new Error(`Taggene '${tags}' har ulik verdi for 'arbeidsordre:' og 'timekode:'`)
         }
         return arbeidsordre || timekode
     }
@@ -164,14 +188,17 @@
         return time_entry
     }
 
-    function time_entries_to_tsv(time_entries) {
+    // Uten `first_day` og `number_of_days` går kolonnene fra første til siste dag med timer
+    function time_entries_to_tsv(time_entries, first_day, number_of_days) {
         //Arbeidsordre	Aktivitet	Beskrivelse	Mandag	Tirsdag	Onsdag	Torsdag	Fredag
         const lines = []
 
         time_entries.sort(sort_by_date)
-        const first_day = time_entries[0].start_date
-        const last_day = time_entries[time_entries.length - 1].start_date
-        const number_of_days = number_of_days_since(last_day, first_day) + 1
+        if (first_day === undefined) {
+            first_day = time_entries[0].start_date
+            const last_day = time_entries[time_entries.length - 1].start_date
+            number_of_days = number_of_days_since(last_day, first_day) + 1
+        }
 
         lines.push([';Arbeidsordre', 'Aktivitet', 'Beskrivelse', ...(get_days(first_day, number_of_days))])
 

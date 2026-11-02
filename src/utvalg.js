@@ -137,8 +137,31 @@
         return item ? item.name : key
     }
 
+    // Prosjekter som er opprettet etter siste henting, finnes ikke i prosjektlisten.
+    // Da brukes kundenavnet som Toggl sender med oppføringen.
+    function isEntryInSelection(entry, selection, projectList) {
+        if (entry.projectId === null) {
+            return selection.includes(withoutProjectKey)
+        }
+
+        const project = projectList.projects.find(p => p.id === entry.projectId)
+        let groupKey
+        if (project) {
+            groupKey = project.clientId === null ? `u:${project.workspaceId}` : `c:${project.clientId}`
+        } else {
+            const client = entry.clientName === null
+                ? null
+                : projectList.clients.find(c => c.workspaceId === entry.workspaceId && c.name === entry.clientName)
+            groupKey = client ? `c:${client.id}` : entry.clientName === null ? `u:${entry.workspaceId}` : null
+        }
+
+        return [`p:${entry.projectId}`, groupKey, `w:${entry.workspaceId}`]
+            .some(key => key !== null && selection.includes(key))
+    }
+
     global.utvalg = {
         withoutProjectKey,
+        isEntryInSelection,
         buildTree,
         getCheckState,
         toggleNode,

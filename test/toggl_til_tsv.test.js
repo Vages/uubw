@@ -150,7 +150,7 @@ describe('toggl_til_tsv', () => {
         const input = gammelt_format_csv(
             gammelt_format_rad({ tags: 'ingen-arbeidsordre' })
         )
-        expect(() => globalThis.toggl_til_tsv(input)).toThrow(/fant verken 'arbeidsordre:' eller 'timekode:'/)
+        expect(() => globalThis.toggl_til_tsv(input)).toThrow(/Fant verken 'arbeidsordre:' eller 'timekode:'/)
     })
 
     it('leser arbeidsordre fra taggen arbeidsordre', () => {
@@ -204,5 +204,36 @@ describe('toggl_til_tsv', () => {
         expect(resultat).toContain('32010000-3')
         expect(resultat).toContain('beskrivelse1')
         expect(resultat).toContain('beskrivelse2')
+    })
+})
+
+describe('oppforinger_til_tsv', () => {
+    beforeEach(() => {
+        globalThis.confirm = vi.fn(() => true)
+    })
+
+    const oppforing = (overrides) => ({
+        description: 'test',
+        start: '2026-11-24T08:00:00+01:00',
+        durationInSeconds: 3600,
+        tags: ['arbeidsordre:12345678-1'],
+        ...overrides,
+    })
+
+    it('legger timene i kolonnen for riktig dag i perioden', () => {
+        const resultat = globalThis.oppforinger_til_tsv([oppforing()], '2026-11-23', 7)
+        const [overskrift, data] = resultat.split('\n').map(l => l.split('\t'))
+        expect(overskrift).toHaveLength(3 + 7)
+        expect(data.slice(3)).toEqual(['', desimal(1.0), '', '', '', '', ''])
+    })
+
+    it('summerer oppføringer med samme arbeidsordre, aktivitet og beskrivelse', () => {
+        const resultat = globalThis.oppforinger_til_tsv([
+            oppforing({ durationInSeconds: 1800, tags: ['arbeidsordre:12345678-1', 'aktivitet:11'] }),
+            oppforing({ durationInSeconds: 1800, tags: ['aktivitet:11', 'arbeidsordre:12345678-1'] }),
+        ], '2026-11-23', 7)
+        const linjer = resultat.split('\n')
+        expect(linjer).toHaveLength(2)
+        expect(linjer[1].split('\t').slice(0, 5)).toEqual(['12345678-1', '11', 'test', '', desimal(1.0)])
     })
 })

@@ -101,3 +101,28 @@ describe('getNameForKey', () => {
         expect(getNameForKey('u:1', projectList)).toBe('Uten kunde (Arbeid)')
     })
 })
+
+describe('isEntryInSelection', () => {
+    const { isEntryInSelection } = globalThis.utvalg
+    const entry = (overrides) => ({ projectId: 100, workspaceId: 1, clientName: 'Havbris', ...overrides })
+
+    it('tar med oppføringer i prosjekter under en valgt kunde', () => {
+        expect(isEntryInSelection(entry(), ['c:10'], projectList)).toBe(true)
+        expect(isEntryInSelection(entry(), ['c:11'], projectList)).toBe(false)
+    })
+
+    it('tar med oppføringer i prosjekter som er opprettet etter siste henting', () => {
+        expect(isEntryInSelection(entry({ projectId: 999 }), ['c:10'], projectList)).toBe(true)
+        expect(isEntryInSelection(entry({ projectId: 999, clientName: null }), ['u:1'], projectList)).toBe(true)
+        expect(isEntryInSelection(entry({ projectId: 999, clientName: 'Ukjent' }), ['u:1'], projectList)).toBe(false)
+    })
+
+    it('tar bare med oppføringer uten prosjekt når «Uten prosjekt» er valgt', () => {
+        expect(isEntryInSelection(entry({ projectId: null }), ['w:1'], projectList)).toBe(false)
+        expect(isEntryInSelection(entry({ projectId: null }), ['ingen-prosjekt'], projectList)).toBe(true)
+    })
+
+    it('tar med alt i et valgt arbeidsområde', () => {
+        expect(isEntryInSelection(entry({ projectId: 999, clientName: 'Ukjent' }), ['w:1'], projectList)).toBe(true)
+    })
+})
