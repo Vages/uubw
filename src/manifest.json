@@ -1,6 +1,6 @@
 {
     "name": "Unngå UBW",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Fyll ut timelisten i UBW eller PowerOffice med timer fra Toggl",
     "manifest_version": 3,
     "permissions": [ "storage" ],
