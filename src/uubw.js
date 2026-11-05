@@ -16,7 +16,7 @@ document.addEventListener('drop', async event => {
     try {
         const contents = await readFile(file.getAsFile())
         tsv = file.type === 'text/csv'
-            ? toggl_til_tsv(contents)
+            ? toggl_til_tsv(contents, { onSkipped: alert })
             : contents
     } catch (err) {
         alert(`Konvertering av CSV feilet: ${err.message}`)

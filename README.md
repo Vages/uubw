@@ -30,6 +30,7 @@ Utvidelsen finner arbeidsordre og aktivitet i taggene på oppføringene i Toggl.
 - Hvis oppføringen også skal ha en aktivitet, tagg med `aktivitet:nr`.
 
 Oppføringer med samme arbeidsordre, aktivitet og beskrivelse blir én rad i timelisten.
+Oppføringer uten arbeidsordre hoppes over, og du får beskjed om hvilke.
 Timene avrundes til nærmeste halvtime.
 
 ### Toggl (direkte)
@@ -48,6 +49,20 @@ Går det en timer i Toggl, stopper utfyllingen til timeren er stoppet.
 
 Toggl gir omtrent 30 kall i timen.
 Sparemodus på tilvalgssiden sparer ett kall per utfylling, men oppdager ikke en timer som ble startet før perioden.
+
+### PowerOffice
+Utvidelsen kan også fylle ut timelisten i [PowerOffice Go](https://go.poweroffice.net/), med det samme utvalget som for UBW.
+
+- Tagg oppføringene med `po-activity:kode`, og eventuelt `po-project:kode`.
+- En oppføring kan ha tagger for både UBW og PowerOffice, og føres da i begge.
+- Oppføringer med samme prosjekt og aktivitet blir én rad. Beskrivelsen brukes ikke.
+
+1. Åpne timelisten i PowerOffice, i ukevisningen.
+2. Trykk _Fyll ut fra Toggl_ ved siden av uken.
+3. Se over timene, og trykk _Godkjenn_ når du er klar.
+
+Hver dag i radene fra Toggl blir lik Toggl, også når det betyr å endre eller slette timer som er ført for hånd.
+Rader som ikke finnes i Toggl, røres ikke. Låste dager endres ikke, men du får beskjed hvis de avviker fra Toggl.
 
 ### Toggl (CSV-format)
 1. Tagg oppføringene, som beskrevet over.

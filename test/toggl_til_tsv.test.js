@@ -2,6 +2,8 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { readFileSync } from 'fs'
 import { fileURLToPath } from 'url'
 import { dirname, resolve } from 'path'
+import '../src/rader.js'
+import '../src/oppforinger.js'
 import '../src/toggl_til_tsv.js'
 
 const testDir = dirname(fileURLToPath(import.meta.url))
@@ -146,11 +148,16 @@ describe('toggl_til_tsv', () => {
         expect(data[4]).toBe(desimal(2.0))
     })
 
-    it('kaster feil ved manglende arbeidsordre i tags', () => {
+    it('hopper over oppføringer uten arbeidsordre, og sier fra', () => {
         const input = gammelt_format_csv(
-            gammelt_format_rad({ tags: 'ingen-arbeidsordre' })
+            gammelt_format_rad({ description: 'uten', tags: 'ingen-arbeidsordre' }),
+            gammelt_format_rad({ description: 'med', tags: 'arbeidsordre:12345678-1' })
         )
-        expect(() => globalThis.toggl_til_tsv(input)).toThrow(/Fant verken 'arbeidsordre:' eller 'timekode:'/)
+        const onSkipped = vi.fn()
+        const linjer = globalThis.toggl_til_tsv(input, { onSkipped }).split('\n')
+        expect(linjer).toHaveLength(2)
+        expect(linjer[1]).toContain('med')
+        expect(onSkipped).toHaveBeenCalledWith(expect.stringMatching(/Mangler taggen 'arbeidsordre:': «uten»/))
     })
 
     it('leser arbeidsordre fra taggen arbeidsordre', () => {
@@ -221,19 +228,27 @@ describe('oppforinger_til_tsv', () => {
     })
 
     it('legger timene i kolonnen for riktig dag i perioden', () => {
-        const resultat = globalThis.oppforinger_til_tsv([oppforing()], '2026-11-23', 7)
+        const { tsv: resultat } = globalThis.oppforinger_til_tsv([oppforing()], '2026-11-23', 7)
         const [overskrift, data] = resultat.split('\n').map(l => l.split('\t'))
         expect(overskrift).toHaveLength(3 + 7)
         expect(data.slice(3)).toEqual(['', desimal(1.0), '', '', '', '', ''])
     })
 
     it('summerer oppføringer med samme arbeidsordre, aktivitet og beskrivelse', () => {
-        const resultat = globalThis.oppforinger_til_tsv([
+        const { tsv } = globalThis.oppforinger_til_tsv([
             oppforing({ durationInSeconds: 1800, tags: ['arbeidsordre:12345678-1', 'aktivitet:11'] }),
             oppforing({ durationInSeconds: 1800, tags: ['aktivitet:11', 'arbeidsordre:12345678-1'] }),
         ], '2026-11-23', 7)
-        const linjer = resultat.split('\n')
+        const linjer = tsv.split('\n')
         expect(linjer).toHaveLength(2)
         expect(linjer[1].split('\t').slice(0, 5)).toEqual(['12345678-1', '11', 'test', '', desimal(1.0)])
+    })
+
+    it('returnerer oppføringer uten arbeidsordre som hoppet over', () => {
+        const { tsv, skipped } = globalThis.oppforinger_til_tsv([
+            oppforing({ description: 'kun PowerOffice', tags: ['po-activity:10'] }),
+        ], '2026-11-23', 7)
+        expect(tsv.split('\n')).toHaveLength(1)
+        expect(skipped).toEqual([{ description: 'kun PowerOffice', hours: 1, reason: "Mangler taggen 'arbeidsordre:'" }])
     })
 })

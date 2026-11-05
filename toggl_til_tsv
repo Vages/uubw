@@ -3,6 +3,7 @@ const path = require('path')
 const fs = require('fs')
 const readline = require('readline-sync')
 global.confirm = readline.keyInYN
+require('./src/rader')
 require('./src/toggl_til_tsv')
 
 const usage = `Usage: ${path.basename(process.argv[1])}  toggl_time_entries.csv [timeliste-2019-13.tsv]`
@@ -17,7 +18,7 @@ if (!fs.existsSync(filename)) {
     process.exit(1)
 }
 
-const tsv = global.toggl_til_tsv(fs.readFileSync(filename, 'utf-8'));
+const tsv = global.toggl_til_tsv(fs.readFileSync(filename, 'utf-8'), { onSkipped: console.log });
 
 const [year, week] = get_year_and_week()
 const output_filename = process.argv[3] || `timeliste-${year}-${week}.tsv`

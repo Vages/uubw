@@ -1,6 +1,4 @@
 // Knapper som fyller ut timelisten med oppføringer fra Toggl, enten for hele timelisten eller én dag
-const extension = globalThis.browser ?? globalThis.chrome
-
 const style = document.createElement('style')
 style.textContent = `
     #uubw-fyll-ut { position: absolute; z-index: 10; padding: 2px 8px; font: inherit; white-space: nowrap; cursor: pointer; }
@@ -104,23 +102,6 @@ function describeColumn (column) {
     return `${dayName.toLowerCase()} ${date}`
 }
 
-function getNextDate (date) {
-    const next = new Date(`${date}T00:00:00`)
-    next.setDate(next.getDate() + 1)
-    return [next.getFullYear(), next.getMonth() + 1, next.getDate()]
-        .map(n => String(n).padStart(2, '0'))
-        .join('-')
-}
-
-// Midnatt i lokal tid, i RFC 3339-formatet Toggl forventer
-function formatLocalMidnight (date) {
-    const offsetInMinutes = -new Date(`${date}T00:00:00`).getTimezoneOffset()
-    const sign = offsetInMinutes >= 0 ? '+' : '-'
-    const hours = String(Math.floor(Math.abs(offsetInMinutes) / 60)).padStart(2, '0')
-    const minutes = String(Math.abs(offsetInMinutes) % 60).padStart(2, '0')
-    return `${date}T00:00:00${sign}${hours}:${minutes}`
-}
-
 async function fillFromToggl (columnNumber) {
     if (isFilling) {
         return
@@ -139,44 +120,20 @@ async function fillFromToggl (columnNumber) {
 async function fillPeriod (columnNumber) {
     const columns = timeliste.readColumns(document)
     const periodColumns = columnNumber === null ? columns : columns.filter(c => c.columnNumber === columnNumber)
-    const firstDate = periodColumns[0].date
-    const endDate = getNextDate(periodColumns[periodColumns.length - 1].date)
     const periodDescription = columnNumber === null
         ? $('[data-u4id="timesheetTitleDetail"]').innerText.trim()
         : describeColumn(periodColumns[0])
 
-    const response = await extension.runtime.sendMessage({
-        type: 'fetchEntries',
-        start: formatLocalMidnight(firstDate),
-        end: formatLocalMidnight(endDate),
-    })
-    if (response.error) {
-        throw new Error(response.error)
-    }
-    const { entries, runningEntry, selection, projectList } = response.result
-    const isSelected = entry => utvalg.isEntryInSelection(entry, selection, projectList)
-
-    const periodEnd = new Date(formatLocalMidnight(endDate))
-    const blockingEntry = [...entries.filter(e => e.isRunning), runningEntry]
-        .filter(e => e && isSelected(e) && new Date(e.start) < periodEnd)[0]
-    if (blockingEntry) {
-        throw new Error(`Timeren for '${blockingEntry.description}' går fortsatt. Stopp den i Toggl, og prøv igjen.`)
-    }
-
-    const selectedEntries = entries.filter(isSelected)
-    if (selectedEntries.length === 0) {
-        throw new Error(`Fant ingen oppføringer i utvalget for ${periodDescription}.`)
-    }
+    const { entries, unknownProjectCount } = await oppforinger.fetchSelected(
+        periodColumns[0].date, periodColumns[periodColumns.length - 1].date, periodDescription)
 
     // Kolonnene i TSV-en går fra første dag i timelisten, så de treffer `regValue1` osv.
-    const tsv = oppforinger_til_tsv(selectedEntries, columns[0].date, columns.length)
+    const { tsv, skipped } = oppforinger_til_tsv(entries, columns[0].date, columns.length)
     await fillTimesheet(tsv, { reuseRows: true })
-
-    const unknownProjectCount = selectedEntries
-        .filter(e => e.projectId !== null && !projectList.projects.some(p => p.id === e.projectId))
-        .length
+    if (skipped.length > 0) {
+        alert(rader.describeSkipped(skipped))
+    }
     if (unknownProjectCount > 0) {
-        alert(`${unknownProjectCount} oppføringer er fra prosjekter som ikke var med da prosjektlisten sist ble hentet. ` +
-              'Hent prosjektene på nytt på tilvalgssiden for å se dem der.')
+        alert(oppforinger.describeUnknownProjects(unknownProjectCount))
     }
 }

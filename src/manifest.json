@@ -1,7 +1,7 @@
 {
     "name": "Unngå UBW",
     "version": "1.0.0",
-    "description": "Last opp timeliste til UBW",
+    "description": "Fyll ut timelisten i UBW eller PowerOffice med timer fra Toggl",
     "manifest_version": 3,
     "permissions": [ "storage" ],
     "host_permissions": [ "https://api.track.toggl.com/*" ],
@@ -16,7 +16,17 @@
     "content_scripts": [
         {
             "matches": [ "https://ubw.unit4cloud.com/*", "https://aspagresso.public.cloudservices.no/*" ],
-            "js": [ "toggl_til_tsv.js", "utvalg.js", "timeliste.js", "uubw.js", "fyll_fra_toggl.js" ]
+            "js": [ "rader.js", "toggl_til_tsv.js", "utvalg.js", "oppforinger.js", "timeliste.js", "uubw.js", "fyll_fra_toggl.js" ]
+        },
+        {
+            "matches": [ "https://go.poweroffice.net/*" ],
+            "js": [ "rader.js", "utvalg.js", "oppforinger.js", "poweroffice.js", "poweroffice_api.js", "fyll_poweroffice.js" ]
+        },
+        {
+            "matches": [ "https://go.poweroffice.net/*" ],
+            "js": [ "poweroffice_side.js" ],
+            "world": "MAIN",
+            "run_at": "document_start"
         }
     ],
     "browser_specific_settings": {
