@@ -1,7 +1,7 @@
 {
     "name": "Unngå UBW",
-    "version": "1.1.0",
-    "description": "Fyll ut timelisten i UBW eller PowerOffice med timer fra Toggl",
+    "version": "1.2.0",
+    "description": "Fyll ut timelisten i UBW, PowerOffice eller SAP med timer fra Toggl",
     "manifest_version": 3,
     "permissions": [ "storage" ],
     "host_permissions": [ "https://api.track.toggl.com/*" ],
@@ -27,6 +27,15 @@
             "js": [ "poweroffice_side.js" ],
             "world": "MAIN",
             "run_at": "document_start"
+        },
+        {
+            "matches": [ "https://*.sapbydesign.com/*" ],
+            "js": [ "rader.js", "utvalg.js", "oppforinger.js", "sap.js", "fyll_sap.js" ]
+        },
+        {
+            "matches": [ "https://*.sapbydesign.com/*" ],
+            "js": [ "sap_side.js" ],
+            "world": "MAIN"
         }
     ],
     "browser_specific_settings": {

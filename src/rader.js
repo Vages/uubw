@@ -1,4 +1,4 @@
-// Gjør oppføringer fra Toggl om til rader med timer per dag, etter reglene til UBW eller PowerOffice.
+// Gjør oppføringer fra Toggl om til rader med timer per dag, etter reglene til UBW, PowerOffice eller SAP.
 // Hvert system har sine tagger, og bestemmer selv om beskrivelsen skiller rader.
 (function (global) {
     const systems = {
@@ -16,6 +16,13 @@
             fields: [
                 { name: 'project', tags: ['po-project'], required: false },
                 { name: 'activity', tags: ['po-activity'], required: true },
+            ],
+            descriptionSeparatesRows: false,
+        },
+        sap: {
+            name: 'SAP',
+            fields: [
+                { name: 'task', tags: ['sap-task'], required: true },
             ],
             descriptionSeparatesRows: false,
         },

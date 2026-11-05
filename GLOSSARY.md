@@ -1,26 +1,27 @@
 # Unngå UBW
 
-Utvidelsen fyller ut timelisten i UBW eller PowerOffice med timer registrert i Toggl, eller fra en fil med timer.
-Begreper som finnes i begge systemene, skrives alltid med forstavelse: «UBW-» eller «PowerOffice-».
+Utvidelsen fyller ut timelisten i UBW, PowerOffice eller SAP med timer registrert i Toggl, eller fra en fil med timer.
+Begreper som finnes i flere av systemene, skrives alltid med forstavelse: «UBW-», «PowerOffice-» eller «SAP-».
+SAP betyr her SAP Business ByDesign.
 
 ## Språk
 
 **Timeføring**:
-Det å føre timer, altså jobben med å levere timene for en periode i UBW eller PowerOffice.
-_Unngå_: timeføring om en enkelt oppføring i Toggl, eller om skjermbildet i UBW eller PowerOffice
+Det å føre timer, altså jobben med å levere timene for en periode i UBW, PowerOffice eller SAP.
+_Unngå_: timeføring om en enkelt oppføring i Toggl, eller om skjermbildet i UBW, PowerOffice eller SAP
 
 **Oppføring**:
 Én registrering i Toggl, med beskrivelse, starttid, varighet og tagger.
 _Unngå_: timeføring, time entry
 
 **Toggl-prosjekt**:
-Et prosjekt i Toggl, uten kobling til et UBW-prosjekt eller et PowerOffice-prosjekt.
+Et prosjekt i Toggl, uten kobling til et UBW-prosjekt, et PowerOffice-prosjekt eller en SAP-oppgave.
 Bare oppføringer i Toggl-prosjekter som brukeren har valgt, er med når timelisten fylles ut.
 _Unngå_: prosjekt (uten forstavelse)
 
 **Toggl-kunde**:
 En kunde i Toggl som Toggl-prosjekter grupperes under.
-Skrives «kunde» der det ikke kan forveksles med noe i UBW eller PowerOffice.
+Skrives «kunde» der det ikke kan forveksles med noe i UBW, PowerOffice eller SAP.
 _Unngå_: klient, client
 
 **Arbeidsområde**:
@@ -80,8 +81,29 @@ Det som lagres i PowerOffice for én dag i en PowerOffice-rad: timene for ett Po
 En celle i PowerOffice-timelisten viser summen av PowerOffice-registreringene den dagen, og det kan være flere.
 _Unngå_: oppføring, timeføring, entry
 
+**SAP-timeliste**:
+Skjemaet i SAP der timene føres, én uke om gangen.
+_Unngå_: timeliste (uten forstavelse), timesheet
+
+**SAP-rad**:
+Én linje i SAP-timelisten, med en SAP-oppgave og timer per dag.
+Raden har også tjenesteprodukt og timetype, men det er SAP-oppgaven som skiller radene fra hverandre, ikke beskrivelsen på oppføringene.
+_Unngå_: rad (uten forstavelse), linje
+
+**SAP-oppgave**:
+En oppgave i et prosjekt i SAP som timene føres på, kjent ved nummeret.
+_Unngå_: aktivitet, task, arbeidsoppgave (det er UBW)
+
+**Frigi**:
+Å sende timene i SAP-timelisten videre, så de ikke lenger bare er lagret. Frigitte timer kan gå til godkjenning.
+_Unngå_: release, sende inn
+
+**Avvist**:
+Om en dag i SAP-timelisten der timene er sendt tilbake fra godkjenning og må rettes og frigis på nytt.
+_Unngå_: rejected
+
 **Periode**:
-Det som føres timer for i én operasjon: enten én dag i timelisten eller hele timelisten, i UBW eller PowerOffice.
+Det som føres timer for i én operasjon: enten én dag i timelisten eller hele timelisten, i UBW, PowerOffice eller SAP.
 _Unngå_: intervall, tidsrom
 
 **Sparemodus**:

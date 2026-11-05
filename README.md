@@ -1,6 +1,6 @@
 # Unngå UBW
 
-Fyll ut timelisten i UBW med timer fra Toggl, med ett trykk.
+Fyll ut timelisten i UBW, PowerOffice eller SAP med timer fra Toggl, med ett trykk.
 Timelisten kan også fylles ut fra en tekstfil med [komma-](https://en.wikipedia.org/wiki/Comma-separated_values) eller [tab-separerte verdier](https://en.wikipedia.org/wiki/Tab-separated_values).
 
 ![](youtube.png)
@@ -63,6 +63,21 @@ Utvidelsen kan også fylle ut timelisten i [PowerOffice Go](https://go.poweroffi
 
 Hver dag i radene fra Toggl blir lik Toggl, også når det betyr å endre eller slette timer som er ført for hånd.
 Rader som ikke finnes i Toggl, røres ikke. Låste dager endres ikke, men du får beskjed hvis de avviker fra Toggl.
+
+### SAP
+Utvidelsen kan også fylle ut timelisten i SAP Business ByDesign (`*.sapbydesign.com`), med det samme utvalget.
+
+- Tagg oppføringene med `sap-task:oppgave`, der `oppgave` er oppgaven i kolonnen _Task_, som `100-4093-1`.
+- Oppføringer med samme oppgave blir én rad. Beskrivelsen brukes ikke.
+- Raden må finnes i timelisten fra før. Oppføringer med en oppgave uten rad hoppes over, og du får beskjed.
+
+1. Åpne _Edit Time Sheet_ i SAP, med _Worklist_ valgt under _View_.
+2. Trykk _Fyll ut fra Toggl_ ved siden av «Time Entries from …» for å fylle ut hele uken.
+   For å fylle ut én dag trykker du ⤓ ved dagen i kolonnetittelen.
+3. Utvidelsen lagrer timelisten. Se over timene, og frigi (_release_) dem selv når du er klar.
+
+Hver dag i radene fra Toggl blir lik Toggl, også når det betyr å endre eller nullstille timer som er ført for hånd.
+Rader som ikke finnes i Toggl, røres ikke. Frigitte dager endres ikke, men du får beskjed hvis de avviker fra Toggl.
 
 ### Toggl (CSV-format)
 1. Tagg oppføringene, som beskrevet over.

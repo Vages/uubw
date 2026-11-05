@@ -26,6 +26,10 @@ describe('readFields', () => {
             .toEqual({ fields: { project: '', activity: '10' } })
     })
 
+    it('leser taggen for SAP', () => {
+        expect(readFields(['sap-task:700-1'], systems.sap)).toEqual({ fields: { task: '700-1' } })
+    })
+
     it('sier hvilken tagg som mangler', () => {
         expect(readFields(['po-project:700'], systems.poweroffice)).toEqual({ missingTag: 'po-activity' })
         expect(readFields([], systems.ubw)).toEqual({ missingTag: 'arbeidsordre' })
