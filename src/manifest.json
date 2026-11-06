@@ -1,6 +1,6 @@
 {
     "name": "Unngå UBW",
-    "version": "2.0.0",
+    "version": "2.1.0",
     "description": "Fyll ut timelisten i Unit4 ERP, PowerOffice eller SAP med timer fra Toggl",
     "manifest_version": 3,
     "permissions": [ "storage" ],
