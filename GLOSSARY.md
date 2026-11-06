@@ -1,27 +1,29 @@
 # Unngå UBW
 
-Utvidelsen fyller ut timelisten i UBW, PowerOffice eller SAP med timer registrert i Toggl, eller fra en fil med timer.
-Begreper som finnes i flere av systemene, skrives alltid med forstavelse: «UBW-», «PowerOffice-» eller «SAP-».
+Utvidelsen fyller ut timelisten i Unit4 ERP, PowerOffice eller SAP med timer registrert i Toggl.
+Begreper som finnes i flere av systemene, skrives alltid med forstavelse: «Unit4-», «PowerOffice-» eller «SAP-».
 SAP betyr her SAP Business ByDesign.
+Unit4 ERP het tidligere Unit4 Business World (UBW). Systemet skrives «Unit4» når det er klart fra sammenhengen, aldri «UBW».
+Navnet på utvidelsen, «Unngå UBW», beholdes.
 
 ## Språk
 
 **Timeføring**:
-Det å føre timer, altså jobben med å levere timene for en periode i UBW, PowerOffice eller SAP.
-_Unngå_: timeføring om en enkelt oppføring i Toggl, eller om skjermbildet i UBW, PowerOffice eller SAP
+Det å føre timer, altså jobben med å levere timene for en periode i Unit4, PowerOffice eller SAP.
+_Unngå_: timeføring om en enkelt oppføring i Toggl, eller om skjermbildet i Unit4, PowerOffice eller SAP
 
 **Oppføring**:
 Én registrering i Toggl, med beskrivelse, starttid, varighet og tagger.
 _Unngå_: timeføring, time entry
 
 **Toggl-prosjekt**:
-Et prosjekt i Toggl, uten kobling til et UBW-prosjekt, et PowerOffice-prosjekt eller en SAP-oppgave.
+Et prosjekt i Toggl, uten kobling til et Unit4-prosjekt, et PowerOffice-prosjekt eller en SAP-oppgave.
 Bare oppføringer i Toggl-prosjekter som brukeren har valgt, er med når timelisten fylles ut.
 _Unngå_: prosjekt (uten forstavelse)
 
 **Toggl-kunde**:
 En kunde i Toggl som Toggl-prosjekter grupperes under.
-Skrives «kunde» der det ikke kan forveksles med noe i UBW, PowerOffice eller SAP.
+Skrives «kunde» der det ikke kan forveksles med noe i Unit4, PowerOffice eller SAP.
 _Unngå_: klient, client
 
 **Arbeidsområde**:
@@ -33,28 +35,28 @@ De arbeidsområdene, Toggl-kundene og Toggl-prosjektene brukeren har valgt.
 Et valgt arbeidsområde eller en valgt kunde omfatter også prosjekter som kommer til senere.
 _Unngå_: filter, valgte prosjekter
 
-**UBW-timeliste**:
-Skjemaet i UBW der timene føres, med et nummer (som «Timeliste 202648») og et datospenn som vises øverst til venstre.
+**Unit4-timeliste**:
+Skjemaet i Unit4 der timene føres, med et nummer (som «Timeliste 202648») og et datospenn som vises øverst til venstre.
 _Unngå_: timeliste (uten forstavelse), timeføring, uke, timesheet
 
-**UBW-rad**:
-Én linje i UBW-timelisten, gitt av arbeidsordre, UBW-aktivitet og beskrivelse, med timer per dag.
+**Unit4-rad**:
+Én linje i Unit4-timelisten, gitt av arbeidsordre, Unit4-aktivitet og beskrivelse, med timer per dag.
 _Unngå_: rad (uten forstavelse), linje, entry
 
 **Arbeidsoppgave**:
-Det en UBW-rad føres på: et UBW-prosjekt, en arbeidsordre under prosjektet og eventuelt en UBW-aktivitet, valgt samlet i UBW.
+Det en Unit4-rad føres på: et Unit4-prosjekt, en arbeidsordre under prosjektet og eventuelt en Unit4-aktivitet, valgt samlet i Unit4.
 
-**UBW-prosjekt**:
-Det øverste nivået i en arbeidsoppgave i UBW, som «Nettbutikk 2027».
+**Unit4-prosjekt**:
+Det øverste nivået i en arbeidsoppgave i Unit4, som «Nettbutikk 2027».
 _Unngå_: prosjekt (uten forstavelse)
 
 **Arbeidsordre**:
-Koden i UBW som timene føres på, for eksempel `40010000-1` for administrasjon.
-Den hører til et UBW-prosjekt.
+Koden i Unit4 som timene føres på, for eksempel `40010000-1` for administrasjon.
+Den hører til et Unit4-prosjekt.
 _Unngå_: timekode, workorder
 
-**UBW-aktivitet**:
-En valgfri underinndeling av en arbeidsordre i UBW, som «Utvikling».
+**Unit4-aktivitet**:
+En valgfri underinndeling av en arbeidsordre i Unit4, som «Utvikling».
 _Unngå_: aktivitet (uten forstavelse)
 
 **PowerOffice-timeliste**:
@@ -105,7 +107,7 @@ Hvor mange timer en dag skal ha i PowerOffice, i dag 7,5. Prosenten i et PowerOf
 _Unngå_: arbeidstid, normal tid
 
 **Datospenn**:
-Dagene fra og med én dato til og med en annen, som dagene i en UBW-timeliste eller i et PowerOffice-fravær.
+Dagene fra og med én dato til og med en annen, som dagene i en Unit4-timeliste eller i et PowerOffice-fravær.
 _Unngå_: periode (det er noe annet i denne ordlista)
 
 **SAP-timeliste**:
@@ -119,7 +121,7 @@ _Unngå_: rad (uten forstavelse), linje
 
 **SAP-oppgave**:
 En oppgave i et prosjekt i SAP som timene føres på, kjent ved nummeret.
-_Unngå_: aktivitet, task, arbeidsoppgave (det er UBW)
+_Unngå_: aktivitet, task, arbeidsoppgave (det er Unit4)
 
 **Frigi**:
 Å sende timene i SAP-timelisten videre, så de ikke lenger bare er lagret. Frigitte timer kan gå til godkjenning.
@@ -130,7 +132,7 @@ Om en dag i SAP-timelisten der timene er sendt tilbake fra godkjenning og må re
 _Unngå_: rejected
 
 **Periode**:
-Det som føres timer for i én operasjon: enten én dag i timelisten eller hele timelisten, i UBW, PowerOffice eller SAP.
+Det som føres timer for i én operasjon: enten én dag i timelisten eller hele timelisten, i Unit4, PowerOffice eller SAP.
 _Unngå_: intervall, tidsrom
 
 **Speile**:

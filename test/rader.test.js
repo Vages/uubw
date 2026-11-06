@@ -12,13 +12,13 @@ const oppforing = (overrides) => ({
 })
 
 describe('readFields', () => {
-    it('leser taggene for UBW', () => {
-        expect(readFields(['arbeidsordre:12345678-1', 'aktivitet:11'], systems.ubw))
+    it('leser taggene for Unit4', () => {
+        expect(readFields(['arbeidsordre:12345678-1', 'aktivitet:11'], systems.unit4))
             .toEqual({ fields: { workOrder: '12345678-1', activity: '11' } })
     })
 
     it('godtar den eldre taggen timekode', () => {
-        expect(readFields(['timekode:12345678-1'], systems.ubw).fields.workOrder).toBe('12345678-1')
+        expect(readFields(['timekode:12345678-1'], systems.unit4).fields.workOrder).toBe('12345678-1')
     })
 
     it('leser taggene for PowerOffice, der prosjektet kan mangle', () => {
@@ -32,7 +32,7 @@ describe('readFields', () => {
 
     it('sier hvilken tagg som mangler', () => {
         expect(readFields(['po-project:700'], systems.poweroffice)).toEqual({ missingTag: 'po-activity' })
-        expect(readFields([], systems.ubw)).toEqual({ missingTag: 'arbeidsordre' })
+        expect(readFields([], systems.unit4)).toEqual({ missingTag: 'arbeidsordre' })
     })
 
     it('finner koden etter et navn med mellomrom i taggen', () => {
@@ -42,23 +42,23 @@ describe('readFields', () => {
             'Navn på tagg timekode:87654321-1',
             'po-project:700 med tekst etter',
         ]
-        expect(readFields(tags, systems.ubw)).toEqual({ fields: { workOrder: '87654321-1', activity: '900001' } })
+        expect(readFields(tags, systems.unit4)).toEqual({ fields: { workOrder: '87654321-1', activity: '900001' } })
         expect(readFields(tags, systems.poweroffice)).toEqual({ fields: { project: '700', activity: '10' } })
     })
 
     it('forveksler ikke tagger med lignende navn', () => {
-        expect(readFields(['po-aktivitet:10', 'xaktivitet:1', 'arbeidsordre:1'], systems.ubw).fields.activity).toBe('')
+        expect(readFields(['po-aktivitet:10', 'xaktivitet:1', 'arbeidsordre:1'], systems.unit4).fields.activity).toBe('')
     })
 
     it('kaster feil ved ulike verdier for samme felt', () => {
-        expect(() => readFields(['arbeidsordre:1', 'timekode:2'], systems.ubw)).toThrow(/ulik verdi/)
+        expect(() => readFields(['arbeidsordre:1', 'timekode:2'], systems.unit4)).toThrow(/ulik verdi/)
         expect(() => readFields(['po-activity:10', 'po-activity:11'], systems.poweroffice)).toThrow(/ulik verdi/)
     })
 })
 
 describe('toRows', () => {
-    it('skiller rader på beskrivelse i UBW', () => {
-        const { rows } = toRows([oppforing({ description: 'a' }), oppforing({ description: 'b' })], systems.ubw, '2026-11-02', 7)
+    it('skiller rader på beskrivelse i Unit4', () => {
+        const { rows } = toRows([oppforing({ description: 'a' }), oppforing({ description: 'b' })], systems.unit4, '2026-11-02', 7)
         expect(rows.map(r => r.description)).toEqual(['a', 'b'])
     })
 
@@ -78,12 +78,12 @@ describe('toRows', () => {
     })
 
     it('ser bort fra oppføringer utenfor perioden', () => {
-        const { rows } = toRows([oppforing({ date: '2026-11-09' })], systems.ubw, '2026-11-02', 7)
+        const { rows } = toRows([oppforing({ date: '2026-11-09' })], systems.unit4, '2026-11-02', 7)
         expect(rows).toEqual([])
     })
 
     it('finner perioden selv uten første dag', () => {
-        const result = toRows([oppforing({ date: '2026-11-04' }), oppforing({ date: '2026-11-02' })], systems.ubw)
+        const result = toRows([oppforing({ date: '2026-11-04' }), oppforing({ date: '2026-11-02' })], systems.unit4)
         expect(result.firstDay).toBe('2026-11-02')
         expect(result.numberOfDays).toBe(3)
         expect(result.rows[0].hours).toEqual([1, 0, 1])

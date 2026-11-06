@@ -7,7 +7,7 @@ Timer føres i SAP Business ByDesign ved at et skript i sidens egen kontekst (`w
 - **OData (`khemployeetime`)**: dokumentert, men en administrator hos kunden må laste opp tjenesten og gi tilgang til den. Utvidelsen skal virke uten noe oppsett hos kunden.
 - **SOAP (`ManageEmployeeTimeIn`)**: krever en teknisk bruker satt opp av en administrator, og kan ikke kjøre med brukerens innlogging.
 - **Sende nettappens JSON-kall selv**: en egen økt stoppes av at timelisten er låst av økten på siden. Bruker vi sidens økt, kommer datamodellen på siden ut av takt med tjeneren, og neste endring brukeren gjør, kan overskrive utfyllingen.
-- **Styre skjermbildet**, som i UBW: cellene har tilfeldige ID-er og ingenting som knytter dem til SAP-oppgave eller dag.
+- **Styre skjermbildet**, som i Unit4: cellene har tilfeldige ID-er og ingenting som knytter dem til SAP-oppgave eller dag.
 
 ## Konsekvenser
 

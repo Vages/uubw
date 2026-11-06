@@ -1,4 +1,4 @@
-// Leser perioden og radene i timelisten i UBW.
+// Leser perioden og radene i timelisten i Unit4.
 // Kolonneoverskriftene for dagene har `data-u4id="regValue1"` osv. og teksten «Man 11/2» (måned/dag).
 (function (global) {
     // Året hentes fra datospennet, og øker hvis måneden går fra desember til januar

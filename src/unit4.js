@@ -54,7 +54,7 @@ async function fillTimesheetRow({ fields, description, hours }, reuseRows = fals
     await sleep(500)
 }
 
-// Uten aktivitet treffes rader med hvilken som helst aktivitet, siden UBW kan velge en selv.
+// Uten aktivitet treffes rader med hvilken som helst aktivitet, siden Unit4 kan velge en selv.
 // Beskrivelsen sammenlignes uten hensyn til store og små bokstaver.
 function findRow (workorder, activity, description) {
     const hasActivity = activity !== '' && activity !== '-'

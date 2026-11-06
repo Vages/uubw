@@ -1,9 +1,9 @@
-// Gjør oppføringer fra Toggl om til rader med timer per dag, etter reglene til UBW, PowerOffice eller SAP.
+// Gjør oppføringer fra Toggl om til rader med timer per dag, etter reglene til Unit4, PowerOffice eller SAP.
 // Hvert system har sine tagger, og bestemmer selv om beskrivelsen skiller rader.
 (function (global) {
     const systems = {
-        ubw: {
-            name: 'UBW',
+        unit4: {
+            name: 'Unit4',
             // `timekode:` er den eldre taggen, og godtas fortsatt for bakoverkompatibilitet
             fields: [
                 { name: 'workOrder', tags: ['arbeidsordre', 'timekode'], required: true },

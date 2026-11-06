@@ -1,4 +1,4 @@
-// Henter oppføringene i utvalget for en periode, via bakgrunnsskriptet. Felles for UBW, PowerOffice og SAP.
+// Henter oppføringene i utvalget for en periode, via bakgrunnsskriptet. Felles for Unit4, PowerOffice og SAP.
 (function (global) {
     const extension = globalThis.browser ?? globalThis.chrome
 

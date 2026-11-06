@@ -1,6 +1,7 @@
 # Unngå UBW
 
-Fyll ut timelisten i UBW, PowerOffice eller SAP med timer fra Toggl, med ett trykk.
+Fyll ut timelisten i Unit4 ERP, PowerOffice eller SAP med timer fra Toggl, med ett trykk.
+Unit4 ERP het tidligere Unit4 Business World (UBW), derav navnet.
 
 ![](youtube.png)
 
@@ -9,7 +10,7 @@ Fyll ut timelisten i UBW, PowerOffice eller SAP med timer fra Toggl, med ett try
 
 ### Firefox
 1. [Trykk på `uubw.xpi`](../../releases/latest/download/uubw.xpi).
-2. Godta installasjon og gi tilgang til UBW og `https://api.track.toggl.com/*`.
+2. Godta installasjon og gi tilgang til Unit4 og `https://api.track.toggl.com/*`.
 
 ### Chrome
 1. [Last ned `uubw.zip`](../../releases/latest/download/uubw.zip), og pakk den ut til en mappe som blir liggende.
@@ -24,7 +25,7 @@ Fyll ut timelisten i UBW, PowerOffice eller SAP med timer fra Toggl, med ett try
 Utvidelsen finner arbeidsordre og aktivitet i taggene på oppføringene i Toggl.
 
 - Tagg oppføringene med `arbeidsordre:nr`.
-  `nr` er arbeidsordre i UBW, eksempelvis er administrasjon `40010000-1`.
+  `nr` er arbeidsordre i Unit4, eksempelvis er administrasjon `40010000-1`.
   Den eldre taggen `timekode:nr` virker fortsatt.
 - Hvis oppføringen også skal ha en aktivitet, tagg med `aktivitet:nr`.
 
@@ -38,7 +39,7 @@ Timene avrundes til nærmeste halvtime.
 2. Lim inn API-nøkkelen fra [profilsiden i Toggl](https://track.toggl.com/profile), og trykk _Lagre_.
 3. Velg kundene og prosjektene i Toggl som skal tas med.
    En valgt kunde tar også med prosjekter som opprettes senere.
-4. Åpne timelisten i UBW.
+4. Åpne timelisten i Unit4.
 5. Trykk _Fyll ut fra Toggl_ ved siden av datospennet for å fylle ut hele timelisten.
    For å fylle ut én dag holder du musepekeren over dagkolonnen og trykker ⤓.
 6. Se over timene, og trykk _Lagre som utkast_.
@@ -50,10 +51,10 @@ Toggl gir omtrent 30 kall i timen.
 Sparemodus på tilvalgssiden sparer ett kall per utfylling, men oppdager ikke en timer som ble startet før perioden.
 
 ### PowerOffice
-Utvidelsen kan også fylle ut timelisten i [PowerOffice Go](https://go.poweroffice.net/), med det samme utvalget som for UBW.
+Utvidelsen kan også fylle ut timelisten i [PowerOffice Go](https://go.poweroffice.net/), med det samme utvalget som for Unit4.
 
 - Tagg oppføringene med `po-activity:kode`, og eventuelt `po-project:kode`.
-- En oppføring kan ha tagger for både UBW og PowerOffice, og føres da i begge.
+- En oppføring kan ha tagger for både Unit4 og PowerOffice, og føres da i begge.
 - Oppføringer med samme prosjekt og aktivitet blir én rad. Beskrivelsen brukes ikke.
 
 1. Åpne timelisten i PowerOffice, i ukevisningen.
@@ -97,8 +98,8 @@ Rader som ikke finnes i Toggl, røres ikke. Frigitte dager endres ikke, men du f
 ## Fravær
 For fravær i PowerOffice, se [Fravær i PowerOffice](#fravær-i-poweroffice).
 
-I UBW tagger du oppføringen med `arbeidsordre:ABSENCE` for å legge inn fravær.
-Beskrivelsen på oppføringen velger typen fravær, og må være _identisk_ med typen i UBW.
+I Unit4 tagger du oppføringen med `arbeidsordre:ABSENCE` for å legge inn fravær.
+Beskrivelsen på oppføringen velger typen fravær, og må være _identisk_ med typen i Unit4.
 
 
 ## Utvikler

@@ -48,7 +48,7 @@ function updateTogglButtons () {
             dayButton = document.createElement('span')
             dayButton.className = 'uubw-dagknapp'
             dayButton.textContent = '⤓'
-            // Hindrer at UBW sorterer eller åpner kolonnemenyen
+            // Hindrer at Unit4 sorterer eller åpner kolonnemenyen
             dayButton.addEventListener('mousedown', event => event.stopPropagation())
             dayButton.addEventListener('click', event => {
                 event.stopPropagation()
@@ -135,7 +135,7 @@ async function fillPeriod (columnNumber) {
     }))
     // Timene i radene går fra første dag i timelisten, så de treffer `regValue1` osv.
     const firstDay = columns[0].date
-    const { rows, skipped } = rader.toRows(tagged, rader.systems.ubw, firstDay, columns.length)
+    const { rows, skipped } = rader.toRows(tagged, rader.systems.unit4, firstDay, columns.length)
     await fillTimesheet(rader.roundToHalfHours(rows, firstDay), { reuseRows: true })
     if (skipped.length > 0) {
         alert(rader.describeSkipped(skipped))
