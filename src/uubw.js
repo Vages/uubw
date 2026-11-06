@@ -23,8 +23,19 @@ document.addEventListener('drop', async event => {
         return
     }
 
-    fillTimesheet(tsv)
+    fillTimesheet(tsvToRows(tsv))
 })
+
+function tsvToRows (tsv) {
+    return tsv.split('\n')
+        .filter(line => line[0] !== ';')
+        .map(line => line.split('\t').map(col => col.trim()))
+        .map(([ workOrder, activity, description, ...hours ]) => ({
+            fields: { workOrder, activity },
+            description,
+            hours: hours.map(amount => amount === '' ? 0 : Number(amount.replace(',', '.'))),
+        }))
+}
 
 function timesheetIsActive () {
     return $$('a.u4-activitybreadcrumbitem-button')
@@ -41,18 +52,12 @@ function readFile (file) {
     })
 }
 
+// Radene er på formen fra `rader.toRows`, med timer per dag fra og med første dag i timelisten.
 // Med `reuseRows` fylles rader med samme arbeidsordre, aktivitet og beskrivelse ut i stedet for å lage nye
-async function fillTimesheet(tsv, { reuseRows = false } = {}) {
-    const timesheetEntries = tsv.split('\n')
-        .filter(line => line[0] !== ';')
-        .map(line =>
-            line.split('\t')
-                .map(col => col.trim())
-        )
-
-    for (const entry of timesheetEntries) {
+async function fillTimesheet(rows, { reuseRows = false } = {}) {
+    for (const row of rows) {
         try {
-            await fillTimesheetRow(entry, reuseRows)
+            await fillTimesheetRow(row, reuseRows)
         } catch (err) {
             console.error(err)
             alert(err.message)
@@ -60,8 +65,10 @@ async function fillTimesheet(tsv, { reuseRows = false } = {}) {
     }
 }
 
-async function fillTimesheetRow([ workorder, activity, description, ...hoursByDay ], reuseRows = false) {
-    console.log([ workorder, activity, description, ...hoursByDay ].join(', '))
+async function fillTimesheetRow({ fields, description, hours }, reuseRows = false) {
+    const workorder = fields.workOrder ?? ''
+    const activity = fields.activity ?? ''
+    console.log([ workorder, activity, description, ...hours ].join(', '))
 
     if (workorder === '') {
         throw new Error(`Ingen arbeidsordre for '${description}', hopper over.`)
@@ -76,17 +83,18 @@ async function fillTimesheetRow([ workorder, activity, description, ...hoursByDa
         await addRow(workorder, activity, description)
     }
 
-    for (let day = 1; day <= hoursByDay.length; day++) {
-        let amount = hoursByDay[day - 1]
-        if (amount === '') {
+    const decimalSeparator = 1.1.toLocaleString(navigator.language).substring(1, 2)
+    for (let day = 1; day <= hours.length; day++) {
+        const amount = hours[day - 1]
+        if (amount === 0) {
             continue;
-        } else if (isNaN(parseFloat(amount))) {
-            alert(`Forventet et tall, men fikk '${amount}'. Hopper over,`)
+        } else if (Number.isNaN(amount)) {
+            alert(`Forventet et tall for '${description}' dag ${day}. Hopper over,`)
             continue;
         }
         const amountInput = $(`input[name="regValue${day}"]`) // regValue1 is first day
         // Does this hold true for week that starts at wednesday? Like 1. july 2018.
-        amountInput.value = amount
+        amountInput.value = amount.toFixed(1).replace('.', decimalSeparator)
         // issue 8, make sure input is saved to state
         amountInput.dispatchEvent(new Event('keyup'))
     }

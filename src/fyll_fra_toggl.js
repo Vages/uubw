@@ -127,9 +127,16 @@ async function fillPeriod (columnNumber) {
     const { entries, unknownProjectCount } = await oppforinger.fetchSelected(
         periodColumns[0].date, periodColumns[periodColumns.length - 1].date, periodDescription)
 
-    // Kolonnene i TSV-en går fra første dag i timelisten, så de treffer `regValue1` osv.
-    const { tsv, skipped } = oppforinger_til_tsv(entries, columns[0].date, columns.length)
-    await fillTimesheet(tsv, { reuseRows: true })
+    const tagged = entries.map(entry => ({
+        description: entry.description,
+        date: oppforinger.toLocalDate(entry.start),
+        hours: entry.durationInSeconds / 60 / 60,
+        tags: entry.tags,
+    }))
+    // Timene i radene går fra første dag i timelisten, så de treffer `regValue1` osv.
+    const firstDay = columns[0].date
+    const { rows, skipped } = rader.toRows(tagged, rader.systems.ubw, firstDay, columns.length)
+    await fillTimesheet(rader.roundToHalfHours(rows, firstDay), { reuseRows: true })
     if (skipped.length > 0) {
         alert(rader.describeSkipped(skipped))
     }
