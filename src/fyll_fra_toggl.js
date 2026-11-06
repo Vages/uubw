@@ -124,7 +124,7 @@ async function fillPeriod (columnNumber) {
         ? $('[data-u4id="timesheetTitleDetail"]').innerText.trim()
         : describeColumn(periodColumns[0])
 
-    const { entries, unknownProjectCount } = await oppforinger.fetchSelected(
+    const { entries, unknownProjectCount } = await oppforinger.fetchSelected('unit4',
         periodColumns[0].date, periodColumns[periodColumns.length - 1].date, periodDescription)
 
     const tagged = entries.map(entry => ({

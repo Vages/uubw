@@ -143,7 +143,7 @@ async function fillPeriod(day) {
         ? `uken ${dates[0]}–${dates[6]}`
         : `${sapTimeliste.dayNames[day]} ${dates[day]}`
 
-    const { entries, unknownProjectCount } = await oppforinger.fetchSelected(dates[days[0]], dates[days[days.length - 1]], periodDescription)
+    const { entries, unknownProjectCount } = await oppforinger.fetchSelected('sap', dates[days[0]], dates[days[days.length - 1]], periodDescription)
     const tagged = entries.map(entry => ({
         description: entry.description,
         date: oppforinger.toLocalDate(entry.start),

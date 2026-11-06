@@ -8,6 +8,11 @@
         section { margin-bottom: 2rem; }
         ul { list-style: none; padding-left: 1.5rem; }
         #prosjekttre > ul { padding-left: 0; }
+        /* Avkrysningskolonnene står rett under hverandre, uansett hvor dypt i treet raden er */
+        .rad { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.1rem 0; }
+        .rad:hover { background: #f3f3f3; }
+        .valg { display: grid; grid-template-columns: repeat(3, 6rem); flex-shrink: 0; text-align: center; }
+        .overskrift { font-weight: 600; border-bottom: 1px solid #ccc; }
         .merknad { color: #666; font-size: 0.9em; }
         #status { white-space: pre-line; }
     </style>
@@ -38,7 +43,7 @@
 
     <section>
         <h2>Prosjekter</h2>
-        <p class="merknad">Bare oppføringer i prosjektene som er valgt her, tas med når timelisten fylles ut.</p>
+        <p class="merknad">Bare oppføringer i prosjektene som er valgt for et timesystem, tas med når timelisten i det timesystemet fylles ut.</p>
         <button id="hent-prosjekter">Hent prosjekter på nytt</button>
         <div id="prosjekttre"></div>
     </section>

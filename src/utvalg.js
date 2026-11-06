@@ -2,8 +2,35 @@
 // `w:<id>` arbeidsområde, `c:<id>` kunde, `u:<id>` «Uten kunde» i et arbeidsområde,
 // `p:<id>` prosjekt og `ingen-prosjekt` for oppføringer uten prosjekt.
 // En valgt node omfatter alt under seg, også det som kommer til senere.
+// Hvert timesystem har sitt eget utvalg, lagret under sin egen nøkkel i `storage.sync`.
 (function (global) {
     const withoutProjectKey = 'ingen-prosjekt'
+
+    const timesystems = {
+        unit4: { name: 'Unit4', storageKey: 'selectionUnit4' },
+        poweroffice: { name: 'PowerOffice', storageKey: 'selectionPoweroffice' },
+        sap: { name: 'SAP', storageKey: 'selectionSap' },
+    }
+
+    // Før 2.1.0 var det ett felles utvalg under `selection`. Det kopieres til timesystemene som ikke har et utvalg,
+    // og slettes. Gir `null` når det ikke er noe å flytte.
+    function migrateSelection(stored) {
+        if (!Array.isArray(stored.selection)) {
+            return null
+        }
+        const set = {}
+        for (const { storageKey } of Object.values(timesystems)) {
+            if (!Array.isArray(stored[storageKey])) {
+                set[storageKey] = [...stored.selection]
+            }
+        }
+        return { set, remove: ['selection'] }
+    }
+
+    // Alle nøklene som er valgt i minst ett timesystem, for å vise arkiverte prosjekter som er med i et utvalg
+    function combineSelections(selections) {
+        return [...new Set(Object.values(selections).flat())]
+    }
 
     function buildTree(projectList, selection, previousProjectIds = null) {
         const parents = new Map()
@@ -161,6 +188,9 @@
 
     global.utvalg = {
         withoutProjectKey,
+        timesystems,
+        migrateSelection,
+        combineSelections,
         isEntryInSelection,
         buildTree,
         getCheckState,

@@ -48,7 +48,8 @@ Timene avrundes til nærmeste halvtime.
 1. Åpne tilvalgssiden (_options page_) for utvidelsen.
    I Firefox går du til `about:addons`, velger _Unngå UBW_ og trykker _Innstillinger_.
 2. Lim inn API-nøkkelen fra [profilsiden i Toggl](https://track.toggl.com/profile), og trykk _Lagre_.
-3. Velg kundene og prosjektene i Toggl som skal tas med.
+3. Velg kundene og prosjektene i Toggl som skal tas med, i kolonnen for hvert timesystem: Unit4, PowerOffice og SAP.
+   Hvert timesystem har sitt eget utvalg, så et prosjekt kan for eksempel føres i Unit4 uten å føres i SAP.
    En valgt kunde tar også med prosjekter som opprettes senere.
 4. Åpne timelisten i Unit4.
 5. Trykk _Fyll ut fra Toggl_ ved siden av datospennet for å fylle ut hele timelisten.
@@ -62,7 +63,7 @@ Toggl gir omtrent 30 kall i timen.
 Sparemodus på tilvalgssiden sparer ett kall per utfylling, men oppdager ikke en timer som ble startet før perioden.
 
 ### PowerOffice
-Utvidelsen kan også fylle ut timelisten i [PowerOffice Go](https://go.poweroffice.net/), med det samme utvalget som for Unit4.
+Utvidelsen kan også fylle ut timelisten i [PowerOffice Go](https://go.poweroffice.net/), med utvalget i PowerOffice-kolonnen.
 
 - Tagg oppføringene med `po-activity:kode`, og eventuelt `po-project:kode`.
 - En oppføring kan ha tagger for både Unit4 og PowerOffice, og føres da i begge.
@@ -91,7 +92,7 @@ Et godkjent fravær må oppheves før det kan slettes, og timene i det kan ikke 
 Derfor endrer eller sletter utvidelsen aldri et fravær som finnes. Dager som har fravær fra før, også opphevet fravær, føres ikke, men du får beskjed hvis fraværet avviker fra Toggl.
 
 ### SAP
-Utvidelsen kan også fylle ut timelisten i SAP Business ByDesign (`*.sapbydesign.com`), med det samme utvalget.
+Utvidelsen kan også fylle ut timelisten i SAP Business ByDesign (`*.sapbydesign.com`), med utvalget i SAP-kolonnen.
 
 - Tagg oppføringene med `sap-task:oppgave`, der `oppgave` er oppgaven i kolonnen _Task_, som `100-4093-1`.
 - Oppføringer med samme oppgave blir én rad. Beskrivelsen brukes ikke.

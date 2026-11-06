@@ -5,28 +5,57 @@ const economyModeInput = document.getElementById('sparemodus')
 const treeContainer = document.getElementById('prosjekttre')
 const statusElement = document.getElementById('status')
 
+const timesystems = Object.entries(utvalg.timesystems)
+
+// `selections` har ett utvalg per nøkkel i `utvalg.timesystems`
 let state = {
     apiToken: '',
     economyMode: false,
-    selection: [],
+    selections: Object.fromEntries(timesystems.map(([key]) => [key, []])),
     projectList: null,
     previousProjectIds: null,
 }
 
 async function loadState() {
-    const synced = await extension.storage.sync.get({ apiToken: '', economyMode: false, selection: [] })
+    const storageDefaults = Object.fromEntries(timesystems.map(([, { storageKey }]) => [storageKey, []]))
+    const synced = await extension.storage.sync.get({ apiToken: '', economyMode: false, ...storageDefaults })
     const local = await extension.storage.local.get({ projectList: null, previousProjectIds: null })
-    state = { ...synced, ...local }
+    state = {
+        apiToken: synced.apiToken,
+        economyMode: synced.economyMode,
+        selections: Object.fromEntries(timesystems.map(([key, { storageKey }]) => [key, synced[storageKey]])),
+        ...local,
+    }
 
     tokenInput.value = state.apiToken
     economyModeInput.checked = state.economyMode
     renderTree()
 }
 
-async function saveState() {
-    const { apiToken, economyMode, selection, projectList, previousProjectIds } = state
-    await extension.storage.sync.set({ apiToken, economyMode, selection })
+// Lagrer bare utvalgene for `changedTimesystems`, så et klikk i treet gir én skriving til `storage.sync`
+async function saveState(changedTimesystems = []) {
+    const { apiToken, economyMode, selections, projectList, previousProjectIds } = state
+    const changedSelections = Object.fromEntries(
+        changedTimesystems.map(key => [utvalg.timesystems[key].storageKey, selections[key]]))
+    await extension.storage.sync.set({ apiToken, economyMode, ...changedSelections })
     await extension.storage.local.set({ projectList, previousProjectIds })
+}
+
+async function saveSelection(timesystem) {
+    const { storageKey } = utvalg.timesystems[timesystem]
+    await extension.storage.sync.set({ [storageKey]: state.selections[timesystem] })
+}
+
+// Fjerner nøkler som ikke finnes i `projectList` fra alle utvalgene, og gir hver nøkkel som ble fjernet én gang
+function pruneSelections(projectList) {
+    const selections = {}
+    const removed = new Set()
+    for (const [key] of timesystems) {
+        const result = utvalg.pruneSelection(state.selections[key], projectList)
+        selections[key] = result.selection
+        result.removed.forEach(k => removed.add(k))
+    }
+    return { selections, removed: [...removed] }
 }
 
 function showStatus(message) {
@@ -56,7 +85,7 @@ async function saveToken() {
         return showStatus(`${error.message}\nDen gamle nøkkelen er beholdt.`)
     }
 
-    const { selection, removed } = utvalg.pruneSelection(state.selection, projectList)
+    const { selections, removed } = pruneSelections(projectList)
     if (removed.length > 0) {
         const confirmed = confirm(`Den nye nøkkelen har ikke tilgang til ${removed.length} av de valgte prosjektene: ` +
             `${describeRemoved(removed, state.projectList)}. De fjernes fra utvalget. Fortsette?`)
@@ -66,8 +95,8 @@ async function saveToken() {
         }
     }
 
-    state = { ...state, apiToken: newToken, selection, projectList, previousProjectIds: null }
-    await saveState()
+    state = { ...state, apiToken: newToken, selections, projectList, previousProjectIds: null }
+    await saveState(timesystems.map(([key]) => key))
     renderTree()
     showStatus(`Nøkkelen er lagret. Fant ${countActiveProjects(projectList)} aktive prosjekter.`)
 }
@@ -85,21 +114,21 @@ async function refreshProjects() {
         return showStatus(error.message)
     }
 
-    const { selection, removed } = utvalg.pruneSelection(state.selection, projectList)
+    const { selections, removed } = pruneSelections(projectList)
     const previousProjectIds = state.projectList ? state.projectList.projects.map(p => p.id) : null
     const removedMessage = removed.length > 0
         ? `\nFinnes ikke lenger i Toggl, og er fjernet fra utvalget: ${describeRemoved(removed, state.projectList)}.`
         : ''
 
-    state = { ...state, selection, projectList, previousProjectIds }
-    await saveState()
+    state = { ...state, selections, projectList, previousProjectIds }
+    await saveState(timesystems.map(([key]) => key))
     renderTree()
     showStatus(`Fant ${countActiveProjects(projectList)} aktive prosjekter.${removedMessage}`)
 }
 
-async function toggleSelection(key, treeAndParents) {
-    state.selection = utvalg.toggleNode(key, state.selection, treeAndParents)
-    await saveState()
+async function toggleSelection(timesystem, key, treeAndParents) {
+    state.selections[timesystem] = utvalg.toggleNode(key, state.selections[timesystem], treeAndParents)
+    await saveSelection(timesystem)
     renderTree()
 }
 
@@ -109,7 +138,8 @@ function renderTree() {
         return
     }
 
-    const treeAndParents = utvalg.buildTree(state.projectList, state.selection, state.previousProjectIds)
+    const combined = utvalg.combineSelections(state.selections)
+    const treeAndParents = utvalg.buildTree(state.projectList, combined, state.previousProjectIds)
     const { tree } = treeAndParents
     // Arbeidsområdet vises bare som eget nivå når det finnes flere
     const workspaces = tree.filter(node => node.key.startsWith('w:'))
@@ -117,25 +147,51 @@ function renderTree() {
         ? [...workspaces[0].children, ...tree.filter(node => !node.key.startsWith('w:'))]
         : tree
 
-    treeContainer.append(createList(topLevel, treeAndParents))
+    treeContainer.append(createHeader(), createList(topLevel, treeAndParents))
+}
+
+function createHeader() {
+    const header = document.createElement('div')
+    header.className = 'rad overskrift'
+    const columns = document.createElement('span')
+    columns.className = 'valg'
+    columns.append(...timesystems.map(([, { name }]) => {
+        const column = document.createElement('span')
+        column.textContent = name
+        return column
+    }))
+    header.append(document.createElement('span'), columns)
+    return header
 }
 
 function createList(nodes, treeAndParents) {
     const list = document.createElement('ul')
     for (const node of nodes) {
-        const checkbox = document.createElement('input')
-        checkbox.type = 'checkbox'
-        const checkState = utvalg.getCheckState(node, state.selection, treeAndParents.parents)
-        checkbox.checked = checkState === 'checked'
-        checkbox.indeterminate = checkState === 'partial'
-        checkbox.addEventListener('change', () => toggleSelection(node.key, treeAndParents))
-
-        const label = document.createElement('label')
+        const name = document.createElement('span')
         const markers = [node.archived && 'arkivert', node.isNew && 'ny'].filter(Boolean)
-        label.append(checkbox, ` ${node.name}`, markers.length > 0 ? ` (${markers.join(', ')})` : '')
+        name.textContent = node.name + (markers.length > 0 ? ` (${markers.join(', ')})` : '')
+
+        const columns = document.createElement('span')
+        columns.className = 'valg'
+        for (const [timesystem, { name: timesystemName }] of timesystems) {
+            const checkbox = document.createElement('input')
+            checkbox.type = 'checkbox'
+            checkbox.setAttribute('aria-label', `${node.name} i ${timesystemName}`)
+            const checkState = utvalg.getCheckState(node, state.selections[timesystem], treeAndParents.parents)
+            checkbox.checked = checkState === 'checked'
+            checkbox.indeterminate = checkState === 'partial'
+            checkbox.addEventListener('change', () => toggleSelection(timesystem, node.key, treeAndParents))
+            const column = document.createElement('span')
+            column.append(checkbox)
+            columns.append(column)
+        }
+
+        const row = document.createElement('div')
+        row.className = 'rad'
+        row.append(name, columns)
 
         const item = document.createElement('li')
-        item.append(label)
+        item.append(row)
         if (node.children.length > 0) {
             item.append(createList(node.children, treeAndParents))
         }

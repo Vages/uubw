@@ -126,3 +126,34 @@ describe('isEntryInSelection', () => {
         expect(isEntryInSelection(entry({ projectId: 999, clientName: 'Ukjent' }), ['w:1'], projectList)).toBe(true)
     })
 })
+
+describe('migrateSelection', () => {
+    const { migrateSelection } = globalThis.utvalg
+
+    it('kopierer det felles utvalget til alle timesystemene, og sletter det', () => {
+        expect(migrateSelection({ selection: ['c:10'] })).toEqual({
+            set: { selectionUnit4: ['c:10'], selectionPoweroffice: ['c:10'], selectionSap: ['c:10'] },
+            remove: ['selection'],
+        })
+    })
+
+    it('overskriver ikke utvalg som finnes fra før', () => {
+        expect(migrateSelection({ selection: ['c:10'], selectionSap: [] }).set)
+            .toEqual({ selectionUnit4: ['c:10'], selectionPoweroffice: ['c:10'] })
+    })
+
+    it('gjør ingenting uten et felles utvalg', () => {
+        expect(migrateSelection({ selectionUnit4: ['c:10'] })).toBeNull()
+    })
+})
+
+describe('combineSelections', () => {
+    const { combineSelections } = globalThis.utvalg
+
+    it('viser arkiverte prosjekter som er valgt i minst ett timesystem', () => {
+        const combined = combineSelections({ unit4: [], poweroffice: ['p:102'], sap: ['c:11'] })
+        expect(combined).toEqual(['p:102', 'c:11'])
+        const havbris = buildTree(projectList, combined).tree[0].children.find(n => n.key === 'c:10')
+        expect(havbris.children.map(n => n.key)).toContain('p:102')
+    })
+})

@@ -77,7 +77,7 @@ async function fillWeek (weekText, headingText) {
     let week = await powerOfficeApi.fetchWeek(weekNo, year)
     poweroffice.assertWeekOpen(week, dates)
 
-    const { entries, unknownProjectCount } = await oppforinger.fetchSelected(dates[0], dates[6], `uke ${weekNo}`)
+    const { entries, unknownProjectCount } = await oppforinger.fetchSelected('poweroffice', dates[0], dates[6], `uke ${weekNo}`)
     const tagged = entries.map(entry => ({
         description: entry.description,
         date: oppforinger.toLocalDate(entry.start),

@@ -25,12 +25,13 @@
         return `${date}T00:00:00${sign}${hours}:${minutes}`
     }
 
-    // Oppføringene i utvalget fra og med `firstDate` til og med `lastDate`.
+    // Oppføringene i utvalget for `timesystem` (en nøkkel i `utvalg.timesystems`) fra og med `firstDate` til og med `lastDate`.
     // Stopper hvis en timer i utvalget går i perioden, eller hvis det ikke finnes noen oppføringer.
-    async function fetchSelected(firstDate, lastDate, periodDescription) {
+    async function fetchSelected(timesystem, firstDate, lastDate, periodDescription) {
         const endDate = getNextDate(lastDate)
         const response = await extension.runtime.sendMessage({
             type: 'fetchEntries',
+            timesystem,
             start: formatLocalMidnight(firstDate),
             end: formatLocalMidnight(endDate),
         })

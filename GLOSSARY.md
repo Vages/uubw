@@ -35,9 +35,13 @@ Den øverste inndelingen i Toggl, som Toggl-kunder og Toggl-prosjekter hører ti
 _Unngå_: workspace
 
 **Utvalg**:
-De arbeidsområdene, Toggl-kundene og Toggl-prosjektene brukeren har valgt.
+De arbeidsområdene, Toggl-kundene og Toggl-prosjektene brukeren har valgt for ett timesystem, som «utvalget for Unit4».
 Et valgt arbeidsområde eller en valgt kunde omfatter også prosjekter som kommer til senere.
-_Unngå_: filter, valgte prosjekter
+_Unngå_: filter, valgte prosjekter, Unit4-utvalg
+
+**Timesystem**:
+Unit4, PowerOffice eller SAP, der timene fra Toggl føres.
+_Unngå_: regnskapssystem, ERP, system (der det kan forveksles)
 
 **Unit4-timeliste**:
 Skjemaet i Unit4 der timene føres, med et nummer (som «Timeliste 202648») og et datospenn som vises øverst til venstre.

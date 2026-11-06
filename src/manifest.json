@@ -6,7 +6,7 @@
     "permissions": [ "storage" ],
     "host_permissions": [ "https://api.track.toggl.com/*" ],
     "background": {
-        "scripts": [ "toggl_api.js", "bakgrunn.js" ],
+        "scripts": [ "toggl_api.js", "utvalg.js", "bakgrunn.js" ],
         "service_worker": "bakgrunn.js"
     },
     "options_ui": {
