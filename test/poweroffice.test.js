@@ -106,7 +106,7 @@ describe('validateEntries', () => {
         const { valid, skipped } = validateEntries([
             oppforing(['po-project:700', 'po-activity:10']),
             oppforing(['po-activity:10']),
-            oppforing(['arbeidsordre:1']),
+            oppforing(['unit4-workorder:1']),
         ], lookups, system)
         expect(valid).toHaveLength(3)
         expect(skipped).toEqual([])

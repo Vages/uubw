@@ -24,10 +24,21 @@ Unit4 ERP het tidligere Unit4 Business World (UBW), derav navnet.
 ### Tagger i Toggl
 Utvidelsen finner arbeidsordre og aktivitet i taggene på oppføringene i Toggl.
 
-- Tagg oppføringene med `arbeidsordre:nr`.
+- Tagg oppføringene med `unit4-workorder:nr`.
   `nr` er arbeidsordre i Unit4, eksempelvis er administrasjon `40010000-1`.
-  Den eldre taggen `timekode:nr` virker fortsatt.
-- Hvis oppføringen også skal ha en aktivitet, tagg med `aktivitet:nr`.
+- Hvis oppføringen også skal ha en aktivitet, tagg med `unit4-activity:nr`.
+
+#### Fra versjon 1 til 2
+Taggene for Unit4 har fått forstavelsen `unit4-`, slik PowerOffice har `po-` og SAP har `sap-`.
+De gamle taggene virker ikke lenger, og oppføringer med dem hoppes over med beskjed om det nye navnet.
+
+| Før | Nå |
+|---|---|
+| `arbeidsordre:nr` eller `timekode:nr` | `unit4-workorder:nr` |
+| `aktivitet:nr` | `unit4-activity:nr` |
+
+Gi taggene nytt navn under _Tags_ i Toggl.
+En tagg er felles for hele arbeidsområdet, så alle oppføringene med taggen får det nye navnet, også de gamle.
 
 Oppføringer med samme arbeidsordre, aktivitet og beskrivelse blir én rad i timelisten.
 Oppføringer uten arbeidsordre hoppes over, og du får beskjed om hvilke.
@@ -98,7 +109,7 @@ Rader som ikke finnes i Toggl, røres ikke. Frigitte dager endres ikke, men du f
 ## Fravær
 For fravær i PowerOffice, se [Fravær i PowerOffice](#fravær-i-poweroffice).
 
-I Unit4 tagger du oppføringen med `arbeidsordre:ABSENCE` for å legge inn fravær.
+I Unit4 tagger du oppføringen med `unit4-workorder:ABSENCE` for å legge inn fravær.
 Beskrivelsen på oppføringen velger typen fravær, og må være _identisk_ med typen i Unit4.
 
 

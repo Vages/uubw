@@ -16,6 +16,10 @@ _Unngå_: timeføring om en enkelt oppføring i Toggl, eller om skjermbildet i U
 Én registrering i Toggl, med beskrivelse, starttid, varighet og tagger.
 _Unngå_: timeføring, time entry
 
+**Systemtagg**:
+En tagg på en oppføring på formen `nøkkel:verdi`, der nøkkelen begynner med forstavelsen til et system, som `unit4-workorder:40010000-1` eller `po-activity:10`.
+_Unngå_: timekode, label
+
 **Toggl-prosjekt**:
 Et prosjekt i Toggl, uten kobling til et Unit4-prosjekt, et PowerOffice-prosjekt eller en SAP-oppgave.
 Bare oppføringer i Toggl-prosjekter som brukeren har valgt, er med når timelisten fylles ut.

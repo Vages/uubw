@@ -7,18 +7,21 @@ const oppforing = (overrides) => ({
     description: 'test',
     date: '2026-11-02',
     hours: 1,
-    tags: ['arbeidsordre:12345678-1', 'po-project:700', 'po-activity:10'],
+    tags: ['unit4-workorder:12345678-1', 'po-project:700', 'po-activity:10'],
     ...overrides,
 })
 
 describe('readFields', () => {
     it('leser taggene for Unit4', () => {
-        expect(readFields(['arbeidsordre:12345678-1', 'aktivitet:11'], systems.unit4))
+        expect(readFields(['unit4-workorder:12345678-1', 'unit4-activity:11'], systems.unit4))
             .toEqual({ fields: { workOrder: '12345678-1', activity: '11' } })
     })
 
-    it('godtar den eldre taggen timekode', () => {
-        expect(readFields(['timekode:12345678-1'], systems.unit4).fields.workOrder).toBe('12345678-1')
+    it('sier hva taggene fra før 2.0.0 heter nå', () => {
+        expect(readFields(['timekode:12345678-1'], systems.unit4))
+            .toEqual({ renamedTag: { from: 'timekode', to: 'unit4-workorder' } })
+        expect(readFields(['unit4-workorder:12345678-1', 'aktivitet:11'], systems.unit4))
+            .toEqual({ renamedTag: { from: 'aktivitet', to: 'unit4-activity' } })
     })
 
     it('leser taggene for PowerOffice, der prosjektet kan mangle', () => {
@@ -32,14 +35,14 @@ describe('readFields', () => {
 
     it('sier hvilken tagg som mangler', () => {
         expect(readFields(['po-project:700'], systems.poweroffice)).toEqual({ missingTag: 'po-activity' })
-        expect(readFields([], systems.unit4)).toEqual({ missingTag: 'arbeidsordre' })
+        expect(readFields([], systems.unit4)).toEqual({ missingTag: 'unit4-workorder' })
     })
 
     it('finner koden etter et navn med mellomrom i taggen', () => {
         const tags = [
             'Navn på tagg po-activity:10',
-            'Navn på tagg aktivitet:900001',
-            'Navn på tagg timekode:87654321-1',
+            'Navn på tagg unit4-activity:900001',
+            'Navn på tagg unit4-workorder:87654321-1',
             'po-project:700 med tekst etter',
         ]
         expect(readFields(tags, systems.unit4)).toEqual({ fields: { workOrder: '87654321-1', activity: '900001' } })
@@ -47,11 +50,11 @@ describe('readFields', () => {
     })
 
     it('forveksler ikke tagger med lignende navn', () => {
-        expect(readFields(['po-aktivitet:10', 'xaktivitet:1', 'arbeidsordre:1'], systems.unit4).fields.activity).toBe('')
+        expect(readFields(['po-activity:10', 'xunit4-activity:1', 'unit4-workorder:1'], systems.unit4).fields.activity).toBe('')
     })
 
     it('kaster feil ved ulike verdier for samme felt', () => {
-        expect(() => readFields(['arbeidsordre:1', 'timekode:2'], systems.unit4)).toThrow(/ulik verdi/)
+        expect(() => readFields(['unit4-workorder:1', 'unit4-workorder:2'], systems.unit4)).toThrow(/ulik verdi/)
         expect(() => readFields(['po-activity:10', 'po-activity:11'], systems.poweroffice)).toThrow(/ulik verdi/)
     })
 })
@@ -72,9 +75,18 @@ describe('toRows', () => {
     })
 
     it('hopper over oppføringer som mangler påkrevde tagger', () => {
-        const { rows, skipped } = toRows([oppforing({ tags: ['arbeidsordre:1'] })], systems.poweroffice, '2026-11-02', 7)
+        const { rows, skipped } = toRows([oppforing({ tags: ['unit4-workorder:1'] })], systems.poweroffice, '2026-11-02', 7)
         expect(rows).toEqual([])
         expect(skipped).toEqual([{ description: 'test', hours: 1, reason: "Mangler taggen 'po-activity:'" }])
+    })
+
+    it('hopper over oppføringer med tagger fra før 2.0.0', () => {
+        const { rows, skipped } = toRows([oppforing({ tags: ['arbeidsordre:1'] })], systems.unit4, '2026-11-02', 7)
+        expect(rows).toEqual([])
+        expect(skipped).toEqual([{
+            description: 'test', hours: 1,
+            reason: "Taggen 'arbeidsordre:' heter nå 'unit4-workorder:'. Gi taggen nytt navn i Toggl",
+        }])
     })
 
     it('ser bort fra oppføringer utenfor perioden', () => {

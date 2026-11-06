@@ -4,25 +4,26 @@
     const systems = {
         unit4: {
             name: 'Unit4',
-            // `timekode:` er den eldre taggen, og godtas fortsatt for bakoverkompatibilitet
             fields: [
-                { name: 'workOrder', tags: ['arbeidsordre', 'timekode'], required: true },
-                { name: 'activity', tags: ['aktivitet'], required: false },
+                { name: 'workOrder', tag: 'unit4-workorder', required: true },
+                { name: 'activity', tag: 'unit4-activity', required: false },
             ],
+            // Taggene fra før 2.0.0 virker ikke lenger, men gir beskjed om det nye navnet
+            renamedTags: { arbeidsordre: 'unit4-workorder', timekode: 'unit4-workorder', aktivitet: 'unit4-activity' },
             descriptionSeparatesRows: true,
         },
         poweroffice: {
             name: 'PowerOffice',
             fields: [
-                { name: 'project', tags: ['po-project'], required: false },
-                { name: 'activity', tags: ['po-activity'], required: true },
+                { name: 'project', tag: 'po-project', required: false },
+                { name: 'activity', tag: 'po-activity', required: true },
             ],
             descriptionSeparatesRows: false,
         },
         sap: {
             name: 'SAP',
             fields: [
-                { name: 'task', tags: ['sap-task'], required: true },
+                { name: 'task', tag: 'sap-task', required: true },
             ],
             descriptionSeparatesRows: false,
         },
@@ -30,7 +31,8 @@
 
     // `navn:verdi` kan stå hvor som helst i taggen, etter et mellomrom, som i «Navn på tagg po-activity:10».
     // Ulike verdier for samme felt er en feil, siden det ikke går an å velge.
-    // Mangler et påkrevd felt, er `missingTag` den første taggen som kunne gitt det.
+    // Mangler et påkrevd felt, er `missingTag` taggen som skulle gitt det.
+    // Har oppføringen en tagg som har fått nytt navn, er `renamedTag` det gamle og det nye navnet.
     function readFields(tags, system) {
         const values = new Map()
         for (const tag of tags) {
@@ -39,15 +41,20 @@
             }
         }
 
+        for (const [from, to] of Object.entries(system.renamedTags ?? {})) {
+            if (values.has(from)) {
+                return { renamedTag: { from, to } }
+            }
+        }
+
         const fields = {}
         for (const field of system.fields) {
-            const found = [...new Set(field.tags.flatMap(tag => values.get(tag) ?? []))]
+            const found = [...new Set(values.get(field.tag) ?? [])]
             if (found.length > 1) {
-                const tagNames = field.tags.map(t => `'${t}:'`).join(' og ')
-                throw new Error(`Taggene '${tags.join(', ')}' har ulik verdi for ${tagNames}`)
+                throw new Error(`Taggene '${tags.join(', ')}' har ulik verdi for '${field.tag}:'`)
             }
             if (found.length === 0 && field.required) {
-                return { missingTag: field.tags[0] }
+                return { missingTag: field.tag }
             }
             fields[field.name] = found[0] ?? ''
         }
@@ -66,7 +73,12 @@
         const rows = []
         const skipped = []
         for (const entry of sorted) {
-            const { fields, missingTag } = readFields(entry.tags, system)
+            const { fields, missingTag, renamedTag } = readFields(entry.tags, system)
+            if (renamedTag !== undefined) {
+                const reason = `Taggen '${renamedTag.from}:' heter nå '${renamedTag.to}:'. Gi taggen nytt navn i Toggl`
+                skipped.push({ description: entry.description, hours: entry.hours, reason })
+                continue
+            }
             if (missingTag !== undefined) {
                 skipped.push({ description: entry.description, hours: entry.hours, reason: `Mangler taggen '${missingTag}:'` })
                 continue
