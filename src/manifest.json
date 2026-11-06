@@ -16,7 +16,7 @@
     "content_scripts": [
         {
             "matches": [ "https://ubw.unit4cloud.com/*", "https://aspagresso.public.cloudservices.no/*" ],
-            "js": [ "rader.js", "toggl_til_tsv.js", "utvalg.js", "oppforinger.js", "timeliste.js", "uubw.js", "fyll_fra_toggl.js" ]
+            "js": [ "rader.js", "utvalg.js", "oppforinger.js", "timeliste.js", "uubw.js", "fyll_fra_toggl.js" ]
         },
         {
             "matches": [ "https://go.poweroffice.net/*" ],

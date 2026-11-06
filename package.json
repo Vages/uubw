@@ -6,7 +6,6 @@
     "start": "web-ext run -s src"
   },
   "dependencies": {
-    "readline-sync": "^1.4.10",
     "web-ext": "^10.7.0"
   },
   "devDependencies": {

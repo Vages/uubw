@@ -1,55 +1,8 @@
-// cancel dragover to allow dropping over other elements
-document.addEventListener('dragover', e => e.preventDefault())
-
-document.addEventListener('drop', async event => {
-    if (!timesheetIsActive()) {
-        return
-    }
-    event.preventDefault()
-
-    const file = toArray(event.dataTransfer.items).find(i => i.type === 'text/tab-separated-values' || i.type === 'text/csv')
-    if (!file) {
-        return console.warn('Fant ingen CSV eller TSV fil, avbryter.')
-    }
-
-    let tsv
-    try {
-        const contents = await readFile(file.getAsFile())
-        tsv = file.type === 'text/csv'
-            ? toggl_til_tsv(contents, { onSkipped: alert })
-            : contents
-    } catch (err) {
-        alert(`Konvertering av CSV feilet: ${err.message}`)
-        return
-    }
-
-    fillTimesheet(tsvToRows(tsv))
-})
-
-function tsvToRows (tsv) {
-    return tsv.split('\n')
-        .filter(line => line[0] !== ';')
-        .map(line => line.split('\t').map(col => col.trim()))
-        .map(([ workOrder, activity, description, ...hours ]) => ({
-            fields: { workOrder, activity },
-            description,
-            hours: hours.map(amount => amount === '' ? 0 : Number(amount.replace(',', '.'))),
-        }))
-}
-
 function timesheetIsActive () {
     return $$('a.u4-activitybreadcrumbitem-button')
         .filter(isVisible)
         .map(el => el.innerText.trim())
         .some(text => text.includes('Timeliste'))
-}
-
-function readFile (file) {
-    return new Promise((resolve) => {
-        const filereader = new FileReader()
-        filereader.readAsText(file)
-        filereader.onload = () => resolve(filereader.result)
-    })
 }
 
 // Radene er på formen fra `rader.toRows`, med timer per dag fra og med første dag i timelisten.
@@ -181,9 +134,6 @@ function getByText (selector, text, element = document) {
 }
 function startsWith(text, start) {
     return text.trim().toLowerCase().indexOf(start.toLowerCase()) === 0
-}
-function toArray (arrayLike) {
-    return arrayLike ? Array.from(arrayLike) : []
 }
 function click (element) {
     if (typeof element === 'string') {

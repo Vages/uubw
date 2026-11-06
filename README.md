@@ -1,7 +1,6 @@
 # Unngå UBW
 
 Fyll ut timelisten i UBW, PowerOffice eller SAP med timer fra Toggl, med ett trykk.
-Timelisten kan også fylles ut fra en tekstfil med [komma-](https://en.wikipedia.org/wiki/Comma-separated_values) eller [tab-separerte verdier](https://en.wikipedia.org/wiki/Tab-separated_values).
 
 ![](youtube.png)
 
@@ -94,92 +93,12 @@ Utvidelsen kan også fylle ut timelisten i SAP Business ByDesign (`*.sapbydesign
 Hver dag i radene fra Toggl blir lik Toggl, også når det betyr å endre eller nullstille timer som er ført for hånd.
 Rader som ikke finnes i Toggl, røres ikke. Frigitte dager endres ikke, men du får beskjed hvis de avviker fra Toggl.
 
-### Toggl (CSV-format)
-1. Tagg oppføringene, som beskrevet over.
-2. Gå til *Reports* → *Detailed* → Velg tidsperiode, eksempelvis *This Week*.
-3. Last ned med knappen oppe til høyre, velg *Download CSV*.
-4. Åpne timelisten i UBW.
-5. Dra over CSV-filen til UBW.
-6. Drikk kaffe og profiiiiiiit.
-
-### Tabseparerte verdier
-1. Lag timeliste i [TSV](https://en.wikipedia.org/wiki/Tab-separated_values) eller et regneark.
-
-	```tsv
-	;Arbeidsordre	Aktivitet	Beskrivelse     	man	tir	ons	tor	fre	lør	søn
-	40010000-1  	-       	Føre timer i UBW	100
-	40010000-1  	-       	Drikke kaffe    	  	8
-	40010000-1  	-       	Profiiiiiit     	  		8
-	ABSENCE     	-       	Lunsj for de med	0,5	0,5	0,5	0,5	0,5
-	ABSENCE     	-       	Lunsjpenger     	1 	1 	1 	1 	1
-	```
-
-2. Åpne timelisten i UBW.
-3. Dra over TSV-filen til UBW.
-4. Drikk kaffe og profiiiiiiit.
-
 
 ## Fravær
 For fravær i PowerOffice, se [Fravær i PowerOffice](#fravær-i-poweroffice).
 
-I UBW bruker du arbeidsordre `ABSENCE` for å legge inn fravær. Beskrivelsen brukes til å
-velge riktig type fravær. Beskrivelsen må være _identisk_ lik den du finner i UBW.
-
-
-## Filformat
-### CSV
-Første linje brukes for å velge kolonner. Felt i bruk er `Description`, `Start date`, `Duration` og `Tags`.
-
-Eksempeleksport fra toggl:
-```csv
-User,Email,Client,Project,Task,Description,Billable,Start date,Start time,End date,End time,Duration,Tags,Amount (USD)
-Ditt Navn,din@epost.no,,,,beskrivelse1,No,2019-04-01,08:00:00,2019-04-01,08:15:00,00:15:00,"timekode:40010000-1",
-Ditt Navn,din@epost.no,,,,beskrivelse2,No,2019-04-01,08:15:00,2019-04-01,08:30:00,00:15:00,"timekode:40010000-3",
-```
-
-Hvis en ønsker lage CSV selv, vil CSV være:
-```csv
-Description,Start date,Duration,Tags
-beskrivelse1,2019-04-01,00:15:00,"timekode:40010000-1"
-beskrivelse2,2019-04-01,00:15:00,"timekode:40010000-3"
-```
-
-### TSV
-- Linjer som starter med `;` blir ignorert.
-- Verdiene er separert med tab.
-- La arbeidsordre som ikke har aktivitet være tom, eller bruk `-`.
-- Timene blir fylt en kolonne av gangen. Det vil si at første kolonne vanligvis
-  er mandag, så kommer tirsdag, osv.
-- Mellomrom før og etter verdier blir fjernet.
-
-#### Korte og lange uker
-Noen uker er ekstra lange. Eksempelvis uke 43 i 2018, som er fra 22. oktober til 31. oktober.
-For lange uker trengs ekstra kolonner for å føre timene:
-
-```tsv
-;arbordre	aktivitet	beskrivelse	man	tir	ons	tor	fre	lør	søn	man	tir	ons
-40010000-1	-       	Lese epost	8	8	8	8	8			8	8	8
-```
-
-Når timene føres vil de ikke bli synlig. En må navigere seg i kalenderen
-for å kontrollere timene for alle dagene:
-
-![](lang-uke.png)
-
-Tilsvarende blir det for kort uke, bare med færre kolonner i TSV-filen. Om en fører i
-for mange kolonner, vil UBW vise summen, men når en lagrer valideres og korrigeres
-timelisten.
-
-### Konvertere fra CSV til TSV
-Om du ønsker å summere og legge sammen timer fra Toggl, kan det gjøres med
-scriptet [toggl_til_tsv](./toggl_til_tsv):
-
-```sh
-$ ./toggl_til_tsv ~/Downloads/Toggl_time_entries_2019-11-18_to_2019-11-24.csv
-Legge til 0,5t lunsj og lunjspenger for dagene du har jobbet? [y/n]: y
-timeliste-2019-48.tsv created
-Deleting /Users/arve/Downloads/Toggl_time_entries_2019-11-18_to_2019-11-24.csv
-```
+I UBW tagger du oppføringen med `arbeidsordre:ABSENCE` for å legge inn fravær.
+Beskrivelsen på oppføringen velger typen fravær, og må være _identisk_ med typen i UBW.
 
 
 ## Utvikler
