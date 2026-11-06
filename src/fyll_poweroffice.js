@@ -96,7 +96,12 @@ async function fillWeek (weekText, headingText) {
 
     const { valid, skipped: invalid } = poweroffice.validateEntries(tagged, lookups, system)
     const { rows, skipped } = rader.toRows(valid, system, dates[0], dates.length)
-    const targets = poweroffice.toTargets(rader.roundToHalfHours(rows, dates[0]), lookups)
+    const { work, absence } = fravaer.partitionRows(rader.roundToHalfHours(rows, dates[0]), activities)
+    const targets = poweroffice.toTargets(work, lookups)
+
+    // Fraværene bekreftes før noe endres, så hele utfyllingen kan ses over samlet
+    const { requests, warnings: absenceWarnings } = fravaer.planAbsences(absence, week, dates, activities, poweroffice.lockedDays(week, dates))
+    const absenceConfirmed = requests.length > 0 && confirm(fravaer.describeRequests(requests))
 
     const newLines = poweroffice.missingLines(targets, week)
     for (const target of newLines) {
@@ -109,6 +114,7 @@ async function fillWeek (weekText, headingText) {
     for (const lineId of removals) {
         await powerOfficeApi.removeLine(lineId, weekNo, year)
     }
+    const approved = absenceConfirmed ? await approveAbsences(requests) : []
 
     const allSkipped = [...skipped, ...invalid]
     if (allSkipped.length > 0) {
@@ -117,13 +123,34 @@ async function fillWeek (weekText, headingText) {
     if (warnings.length > 0) {
         alert(`Disse dagene er låst og ble ikke endret:\n\n${warnings.join('\n')}`)
     }
+    if (absenceWarnings.length > 0) {
+        alert(`Disse PowerOffice-fraværene ble ikke ført eller endret:\n\n${absenceWarnings.join('\n')}`)
+    }
+    if (requests.length > 0 && !absenceConfirmed) {
+        alert(`${requests.length} PowerOffice-fravær ble ikke ført.`)
+    }
     if (unknownProjectCount > 0) {
         alert(oppforinger.describeUnknownProjects(unknownProjectCount))
     }
-    const changes = newLines.length + saves.length + removals.length
-    if (changes === 0 && allSkipped.length === 0 && warnings.length === 0) {
+    const changes = newLines.length + saves.length + removals.length + approved.length
+    const notices = allSkipped.length + warnings.length + absenceWarnings.length + requests.length
+    if (changes === 0 && notices === 0) {
         alert(`Uke ${weekNo} stemmer allerede med Toggl.`)
     } else if (changes > 0) {
         alert(`Uke ${weekNo} er fylt ut fra Toggl. Last siden på nytt hvis timene ikke vises.`)
     }
+}
+
+// Fører og godkjenner fraværene ett etter ett, med en mal per type. Gir ID-ene.
+async function approveAbsences (requests) {
+    const templates = new Map()
+    const ids = []
+    for (const request of requests) {
+        if (!templates.has(request.type)) {
+            templates.set(request.type, await powerOfficeApi.loadAbsenceTemplate(request.type))
+        }
+        const body = await powerOfficeApi.processAbsence(fravaer.toRequestBody(templates.get(request.type), request))
+        ids.push(await powerOfficeApi.approveAbsence(body))
+    }
+    return ids
 }

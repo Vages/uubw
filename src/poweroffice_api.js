@@ -85,5 +85,27 @@
         return request('DELETE', `${timetracking}/timesheet/timesheet/removeLine?${query}`)
     }
 
-    global.powerOfficeApi = { fetchWeek, fetchActivities, findProjects, fetchAllowedActivityIds, saveNewLine, saveEntry, removeLine }
+    // Dialogen «Nytt fravær». `loadrequest` gir en mal for typen, `processrequest` regner ut minutter og dager,
+    // og `approve` lagrer og godkjenner fraværet. Se docs/adr/0003-poweroffice-fravaer-via-fravaersdialogen.md.
+    const holidayLeaveDialog = '/api/holidayandleave/dialog/holidayleavedialog'
+
+    function loadAbsenceTemplate(type) {
+        return request('GET', `${holidayLeaveDialog}/loadrequest?defaultToLoggedInEmployee=true&type=${type}`)
+    }
+
+    // `body` fra `fravaer.toRequestBody`. Gir det samme med feltene PowerOffice har regnet ut.
+    async function processAbsence(body) {
+        const processed = await request('PUT', `${holidayLeaveDialog}/processrequest`, body)
+        return { ...body, ...processed }
+    }
+
+    // Gir ID-en til fraværet
+    function approveAbsence(body) {
+        return request('POST', `${holidayLeaveDialog}/approve`, body)
+    }
+
+    global.powerOfficeApi = {
+        fetchWeek, fetchActivities, findProjects, fetchAllowedActivityIds, saveNewLine, saveEntry, removeLine,
+        loadAbsenceTemplate, processAbsence, approveAbsence,
+    }
 })(globalThis);

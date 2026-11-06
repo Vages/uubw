@@ -81,6 +81,33 @@ Det som lagres i PowerOffice for én dag i en PowerOffice-rad: timene for ett Po
 En celle i PowerOffice-timelisten viser summen av PowerOffice-registreringene den dagen, og det kan være flere.
 _Unngå_: oppføring, timeføring, entry
 
+**PowerOffice-fravær**:
+Ett fravær ført fra «Nytt fravær» i PowerOffice, med en PowerOffice-aktivitet og enten et datospenn i dager eller timer på én dato.
+Det er ikke en PowerOffice-rad.
+_Unngå_: fravær (uten forstavelse), fraværsrad, absence
+
+**Fraværskategori**:
+Hovedtypen et PowerOffice-fravær hører til: Ferie, Avspasering, Sykefravær eller Permisjon.
+Hver PowerOffice-aktivitet for fravær hører til én fraværskategori.
+_Unngå_: fraværstype
+
+**Godkjenne**:
+Å lagre et PowerOffice-fravær med «Godkjenn», så det står i PowerOffice-timelisten. Et PowerOffice-fravær kan ikke lagres uten å godkjennes.
+_Unngå_: approve, sende inn
+
+**Oppheve**:
+Å trekke tilbake godkjenningen av et PowerOffice-fravær, noe som må gjøres før det kan slettes eller endres.
+Et opphevet PowerOffice-fravær står fortsatt i PowerOffice-timelisten, og timene per dag kan fortsatt ikke endres der.
+_Unngå_: undo, angre
+
+**Normtid**:
+Hvor mange timer en dag skal ha i PowerOffice, i dag 7,5. Prosenten i et PowerOffice-fravær for sykefravær er en andel av normtiden.
+_Unngå_: arbeidstid, normal tid
+
+**Datospenn**:
+Dagene fra og med én dato til og med en annen, som dagene i en UBW-timeliste eller i et PowerOffice-fravær.
+_Unngå_: periode (det er noe annet i denne ordlista)
+
 **SAP-timeliste**:
 Skjemaet i SAP der timene føres, én uke om gangen.
 _Unngå_: timeliste (uten forstavelse), timesheet
@@ -105,6 +132,11 @@ _Unngå_: rejected
 **Periode**:
 Det som føres timer for i én operasjon: enten én dag i timelisten eller hele timelisten, i UBW, PowerOffice eller SAP.
 _Unngå_: intervall, tidsrom
+
+**Speile**:
+Å gjøre hver dag i radene som finnes i Toggl, lik Toggl i PowerOffice eller SAP, også når det betyr å endre eller slette timer som er ført for hånd.
+Rader som ikke finnes i Toggl, røres ikke, og låste, frigitte eller godkjente dager endres ikke. PowerOffice-fravær speiles ikke.
+_Unngå_: synkronisere, overskrive
 
 **Sparemodus**:
 En innstilling som bruker færre kall mot Toggl, på bekostning av at en timer som ble startet før perioden og fortsatt går, ikke oppdages.

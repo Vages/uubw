@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import '../src/rader.js'
+import '../src/poweroffice_fravaer.js'
 import '../src/poweroffice.js'
 
 const { parseWeekHeading, weekDates, readLines, lockedDays, assertWeekOpen, validateEntries, toTargets, missingLines, planEntries } = globalThis.poweroffice

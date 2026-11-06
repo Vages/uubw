@@ -77,6 +77,9 @@
         if (activity === undefined || activity.isActive === false) {
             return `Ukjent eller inaktiv PowerOffice-aktivitet 'po-activity:${activityCode}'`
         }
+        if (fravaer.isAbsence(activity)) {
+            return fravaer.findInvalidReason({ project: projectCode, activity: activityCode }, activity)
+        }
         if (projectCode === '') {
             return activity.requireProject ? `PowerOffice-aktivitet 'po-activity:${activityCode}' krever prosjekt` : null
         }

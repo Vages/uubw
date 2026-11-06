@@ -64,6 +64,21 @@ Utvidelsen kan også fylle ut timelisten i [PowerOffice Go](https://go.poweroffi
 Hver dag i radene fra Toggl blir lik Toggl, også når det betyr å endre eller slette timer som er ført for hånd.
 Rader som ikke finnes i Toggl, røres ikke. Låste dager endres ikke, men du får beskjed hvis de avviker fra Toggl.
 
+#### Fravær i PowerOffice
+Sykefravær og permisjon tagges på samme måte, med aktiviteten for fraværet, som `po-activity:903` for «Syk med sykemelding» eller `po-activity:909` for «Helse - lege/tannlege».
+Utvidelsen ser selv at aktiviteten er fravær, og fører den fra _Nytt fravær_ i stedet for som en rad.
+Fravær kan ikke ha `po-project:`, og ferie og avspasering støttes ikke ennå.
+
+- Sykefravær føres i dager, med timene i Toggl som prosent av normtiden for dagen.
+  Prosenten har fire desimaler, så PowerOffice regner seg fram til de samme timene, som 33,3334 % for 2,5 t.
+  Dager som henger sammen og har samme prosent, blir ett fravær. Får samme aktivitet flere fravær i uken, får du beskjed, siden hvert fravær med egenmelding teller som én egenmeldingsperiode.
+- Permisjon føres i timer, med ett fravær per dag.
+- Kommentarfeltet står alltid tomt.
+
+Før fraværene føres, ser du en liste over dem og må bekrefte. Fraværene godkjennes når de føres, slik som når du trykker _Godkjenn_ selv.
+Et godkjent fravær må oppheves før det kan slettes, og timene i det kan ikke endres i timelisten.
+Derfor endrer eller sletter utvidelsen aldri et fravær som finnes. Dager som har fravær fra før, også opphevet fravær, føres ikke, men du får beskjed hvis fraværet avviker fra Toggl.
+
 ### SAP
 Utvidelsen kan også fylle ut timelisten i SAP Business ByDesign (`*.sapbydesign.com`), med det samme utvalget.
 
@@ -105,7 +120,9 @@ Rader som ikke finnes i Toggl, røres ikke. Frigitte dager endres ikke, men du f
 
 
 ## Fravær
-Bruk arbeidsordre `ABSENCE` for å legge inn fravær. Beskrivelsen brukes til å
+For fravær i PowerOffice, se [Fravær i PowerOffice](#fravær-i-poweroffice).
+
+I UBW bruker du arbeidsordre `ABSENCE` for å legge inn fravær. Beskrivelsen brukes til å
 velge riktig type fravær. Beskrivelsen må være _identisk_ lik den du finner i UBW.
 
 
